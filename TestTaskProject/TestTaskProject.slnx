@@ -1,5 +1,6 @@
 ﻿<Solution>
   <Project Path="Zenject.csproj" />
   <Project Path="Zenject-Editor.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Gameplay.csproj" />
+  <Project Path="Core.csproj" />
 </Solution>

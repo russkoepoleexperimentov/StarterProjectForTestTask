@@ -11,8 +11,11 @@
 краткое описание архитектурных решений и того, как новая логика встроена в существующий Core;
 
 # Оценка трудозатрат
-## Общее кол-во: 5 часов
+## Общее кол-во: 11 часов
+## Общее кол-во (только проектирование и кодинг): 9 часов
 - Изучение существующей структуры, разработка подмодуля загрузки сцен - 5 часов
+- Поиск, импорт и настройка ассетов и сцены - 2 часа
+- База алгоритмики машины + архитектура - 4 часа
 
 # Перечень использованных источников и ассистентов
 ## Ассистенты
@@ -21,9 +24,11 @@
 ## Документация + информационные ресурсы
 - https://learn.microsoft.com/ru-ru/dotnet/api/system.threading.tasks.taskcompletionsource-1?view=net-10.0
 - https://www.youtube.com/watch?v=NuVrpZeDUIc&pp=ygUp0LzQsNC60YHQuNC8INC60YDRjtC60L7QsiB0b3dlciBkZWZlbmNlIDg%3D
+- https://github.com/EthanReid/unity-scripts/
 
 ## Third-party assets
 - https://assetstore.unity.com/packages/3d/environments/urban/demo-city-by-versatile-studio-mobile-friendly-269772
+- https://assetstore.unity.com/packages/3d/vehicles/land/3d-low-poly-car-for-games-tocus-101652
 
 # Известные проблемы
 известные проблемы, ограничения и части, которые сознательно оставлены без реализации;

@@ -1,62 +1,81 @@
 using System;
-using System.Threading.Tasks;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 using TMPro;
-using static EventsProvider;
 
-public class LoadingView : ScreenView 
+public class LoadingView : ScreenView
 {
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private TMP_Text _descriptionText;
     [SerializeField] private Image _fillImage;
     [SerializeField] private float _fillTime = 0.5f;
+    [SerializeField] private float _fadeTime = 1f;
 
-    [Inject]
-    private EventManager _eventManager;
+    [Inject] private LoadingState _state;
 
-    private Coroutine _currentAdjustFillAmountRoutine;
+    private Coroutine _fillRoutine;
+    private Coroutine _completionRoutine;
 
-    private void OnEnable()
+    public override ScreenController Construct(EventManager eventManager)
     {
-        _canvasGroup.alpha = 1;
-        _eventManager.Subscribe<UpdateLoadingContextEvent>(UpdateContext);
-        _eventManager.Subscribe<UpdateLoadingProgressEvent>(UpdateFill);
-        _eventManager.Subscribe<StartLoadingScreenFadeEvent>(StartFadeOut);
+        return new LoadingScreenController(this, eventManager, _state);
     }
 
-    private void OnDisable()
+    public void SetDescription(string description)
     {
-        _eventManager.Unsubscribe<UpdateLoadingContextEvent>(UpdateContext);
-        _eventManager.Unsubscribe<UpdateLoadingProgressEvent>(UpdateFill);
-        _eventManager.Unsubscribe<StartLoadingScreenFadeEvent>(StartFadeOut);
+        _descriptionText.text = description;
     }
 
-    private void UpdateContext(UpdateLoadingContextEvent context) 
+    public void SetProgress(float progress)
     {
-        _descriptionText.text = context.Description;
-    }
+        StopFill();
 
-    private void UpdateFill(UpdateLoadingProgressEvent @event)
-    {
-        if(_currentAdjustFillAmountRoutine != null)
-        {
-            StopCoroutine(_currentAdjustFillAmountRoutine);
-            _currentAdjustFillAmountRoutine = null;
-        }
-
-        if(Mathf.Approximately(@event.Progress, 0))
+        if (Mathf.Approximately(progress, 0))
         {
             _fillImage.fillAmount = 0;
             return;
         }
 
-        _currentAdjustFillAmountRoutine = StartCoroutine(AdjustFillAmount(@event.Progress));
+        _fillRoutine = StartCoroutine(AdjustFillAmount(progress));
     }
 
-    private IEnumerator AdjustFillAmount(float desired) 
+    public void SetOpaque()
+    {
+        StopCompletion();
+        _canvasGroup.alpha = 1;
+    }
+
+    public void PlayCompletion(Action onFinished)
+    {
+        StopCompletion();
+        _completionRoutine = StartCoroutine(CompletionRoutine(onFinished));
+    }
+
+    private void OnDisable()
+    {
+        StopFill();
+        StopCompletion();
+    }
+
+    private void StopFill()
+    {
+        if (_fillRoutine == null) return;
+
+        StopCoroutine(_fillRoutine);
+        _fillRoutine = null;
+    }
+
+    private void StopCompletion()
+    {
+        if (_completionRoutine == null) return;
+
+        StopCoroutine(_completionRoutine);
+        _completionRoutine = null;
+    }
+
+    private IEnumerator AdjustFillAmount(float desired)
     {
         var start = _fillImage.fillAmount;
 
@@ -67,19 +86,30 @@ public class LoadingView : ScreenView
         }
 
         _fillImage.fillAmount = desired;
+        _fillRoutine = null;
     }
 
-    private void StartFadeOut(StartLoadingScreenFadeEvent fadeEvent) => StartCoroutine(FadeOut(fadeEvent));
-
-    private IEnumerator FadeOut(StartLoadingScreenFadeEvent fadeEvent)
+    private IEnumerator CompletionRoutine(Action onFinished)
     {
-        float timeSeconds = fadeEvent.TimeMs / 1000f;
+        while (_fillRoutine != null)
+            yield return null;
 
-        for (float t = 0; t <= 1; t += Time.unscaledDeltaTime / timeSeconds)
+        while (!Mathf.Approximately(_fillImage.fillAmount, 1))
         {
-            if(_canvasGroup)
-                _canvasGroup.alpha = 1 - t;
+            _fillImage.fillAmount = Mathf.MoveTowards(_fillImage.fillAmount, 1, Time.unscaledDeltaTime / _fillTime);
             yield return null;
         }
+
+        _fillImage.fillAmount = 1;
+
+        for (float t = 0; t <= 1; t += Time.unscaledDeltaTime / _fadeTime)
+        {
+            _canvasGroup.alpha = 1 - t;
+            yield return null;
+        }
+
+        _canvasGroup.alpha = 0;
+        _completionRoutine = null;
+        onFinished?.Invoke();
     }
 }

@@ -1,62 +1,78 @@
-using Zenject;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 using static EventsProvider;
 
-public class LoadingService 
+public class LoadingService
 {
     private readonly EventManager _eventManager;
     private readonly UIController _uiController;
+    private readonly LoadingState _state;
+    private readonly Queue<ILoadingOperation> _loadingOperations = new();
 
-    private Queue<ILoadingOperation> _loadingOperations;
     private bool _active;
 
-    private const int DELAY_AFTER_LAST_LOADING_MS = 1000; 
+    private const int PRESENTATION_TIMEOUT_MS = 10000;
     private const string LOADING_SCREEN_ID = "LoadingScreen";
 
-    public LoadingService(EventManager eventManager, UIController controller) 
+    public LoadingService(EventManager eventManager, UIController controller, LoadingState state)
     {
         _eventManager = eventManager;
         _uiController = controller;
-        _loadingOperations = new();
+        _state = state;
+        _eventManager.Subscribe<StartLoadingEvent>(HandleStartLoading);
     }
 
-    public void AppendOperation(ILoadingOperation operation) 
+    public void AppendOperation(ILoadingOperation operation)
     {
+        if (operation == null) return;
+
         _loadingOperations.Enqueue(operation);
         LoadAll();
     }
 
+    private void HandleStartLoading(StartLoadingEvent startEvent) => AppendOperation(startEvent.Operation);
+
     private async void LoadAll()
     {
-        if(_active)
-            return;
+        if (_active) return;
 
         _active = true;
 
-        _eventManager.Publish(new OpenScreenEvent(LOADING_SCREEN_ID));
-
-        while (_loadingOperations.Count > 0)
+        try
         {
-            var currentOperation = _loadingOperations.Dequeue();
-            
-            await currentOperation.Run(UpdateProgressHandler, UpdateDescriptionHandler);
+            _state.Reset();
+            _eventManager.Publish(new OpenScreenEvent(LOADING_SCREEN_ID));
+
+            while (_loadingOperations.Count > 0)
+            {
+                var currentOperation = _loadingOperations.Dequeue();
+                await currentOperation.Run(_state.SetProgress, _state.SetDescription);
+            }
+
+            _state.Complete();
+            await WaitForPresentation();
+
+            _uiController.Clear();
         }
-
-        _eventManager.Publish(new StartLoadingScreenFadeEvent(DELAY_AFTER_LAST_LOADING_MS));
-        await Task.Delay(DELAY_AFTER_LAST_LOADING_MS);
-
-        _uiController.Clear(); // TODO: publish event "close screen LOADING_SCREEN_ID"
-        _active = false;
+        catch (Exception exception)
+        {
+            Debug.LogException(exception);
+            _loadingOperations.Clear();
+            _uiController.Clear();
+        }
+        finally
+        {
+            _active = false;
+        }
     }
 
-    private void UpdateDescriptionHandler(string description)
+    private async Task WaitForPresentation()
     {
-        _eventManager.Publish(new UpdateLoadingContextEvent(description));
-    }
+        var finished = await Task.WhenAny(_state.PresentationCompleted, Task.Delay(PRESENTATION_TIMEOUT_MS));
 
-    private void UpdateProgressHandler(float progress)
-    {
-        _eventManager.Publish(new UpdateLoadingProgressEvent(progress));
+        if (finished != _state.PresentationCompleted)
+            Debug.LogWarning($"Loading screen presentation did not finish in {PRESENTATION_TIMEOUT_MS} ms.");
     }
 }

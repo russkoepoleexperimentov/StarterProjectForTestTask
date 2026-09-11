@@ -1,24 +1,26 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
 
 [RequireComponent(typeof(Button))]
 public class LoadSceneButton : MonoBehaviour
 {
+    public string SceneName => _sceneName;
+    public string LoadingDescription => _loadingDescription;
+
+    public event Action<LoadSceneButton> Clicked;
+
     [SerializeField] private string _sceneName;
     [SerializeField] private string _loadingDescription;
 
     private Button _button;
 
-    [Inject]
-    private LoadingService _service;
-
-    private void Awake() 
+    private void Awake()
     {
         _button = GetComponent<Button>();
     }
 
-    private void OnEnable() 
+    private void OnEnable()
     {
         _button.onClick.AddListener(HandleClick);
     }
@@ -28,8 +30,5 @@ public class LoadSceneButton : MonoBehaviour
         _button.onClick.RemoveListener(HandleClick);
     }
 
-    private void HandleClick() 
-    {
-        _service.AppendOperation(new SceneLoadingOperation(_sceneName, _loadingDescription));
-    }
+    private void HandleClick() => Clicked?.Invoke(this);
 }

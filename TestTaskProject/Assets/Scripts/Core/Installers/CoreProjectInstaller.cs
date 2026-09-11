@@ -9,6 +9,7 @@ public class CoreProjectInstaller : MonoInstaller
     {
         Container.Bind<EventManager>().AsSingle();
         Container.Bind<UIController>().FromInstance(_uiController).AsSingle();
-        Container.Bind<LoadingService>().AsSingle();
+        Container.Bind<LoadingState>().AsSingle();
+        Container.Bind<LoadingService>().AsSingle().NonLazy();
     }
 }

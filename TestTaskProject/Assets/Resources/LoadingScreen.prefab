@@ -171,6 +171,7 @@ MonoBehaviour:
   _descriptionText: {fileID: 5726818033381510417}
   _fillImage: {fileID: 5689674637980627827}
   _fillTime: 0.5
+  _fadeTime: 1
 --- !u!225 &230519791925127896
 CanvasGroup:
   m_ObjectHideFlags: 0

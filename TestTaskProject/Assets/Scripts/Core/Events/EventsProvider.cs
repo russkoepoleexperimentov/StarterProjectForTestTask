@@ -10,33 +10,13 @@ public static class EventsProvider
         }
     }
 
-    public struct UpdateLoadingContextEvent 
+    public struct StartLoadingEvent
     {
-        public readonly string Description;
+        public readonly ILoadingOperation Operation;
 
-        public UpdateLoadingContextEvent(string description)
+        public StartLoadingEvent(ILoadingOperation operation)
         {
-            Description = description;
-        }
-    }
-
-    public struct UpdateLoadingProgressEvent 
-    {
-        public readonly float Progress;
-
-        public UpdateLoadingProgressEvent(float progress)
-        {
-            Progress = progress;
-        }
-    }
-
-    public struct StartLoadingScreenFadeEvent 
-    {
-        public readonly float TimeMs;
-
-        public StartLoadingScreenFadeEvent(float timeMs)
-        {
-            TimeMs = timeMs;
+            Operation = operation;
         }
     }
 }

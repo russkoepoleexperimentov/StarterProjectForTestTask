@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e14321f2119ba5241869376381684c5e, type: 3}
   m_Name: GenericEngine
   m_EditorClassIdentifier: Gameplay::EngineConfig
-  <MaxTorqueNm>k__BackingField: 664
-  <MaxTorqueRPM>k__BackingField: 4000
-  <MaxPowerWatts>k__BackingField: 317000
-  <MaxPowerRPM>k__BackingField: 5000
+  <MaxTorqueNm>k__BackingField: 201
+  <MaxTorqueRPM>k__BackingField: 5000
+  <MaxPowerWatts>k__BackingField: 92000
+  <MaxPowerRPM>k__BackingField: 6350
   <IdleRPM>k__BackingField: 800
-  <RedlineRPM>k__BackingField: 6500
+  <RedlineRPM>k__BackingField: 7000
   <IdleTorqueFraction>k__BackingField: 0.35
   <InertiaKgM>k__BackingField: 0.3
   <BaseFriction>k__BackingField: 25

@@ -3,12 +3,19 @@ using UnityEngine;
 public class UserInputView : MonoBehaviour, IInputSource {
     private PlayerInput _input;
 
-    private void Start() {
+    private void Awake() {
         _input = new();
         _input.Enable();
     }
 
+    private void OnDestroy() {
+        _input?.Dispose();
+    }
+
     public DrivetrainInputModel Read() {
+        if (_input == null)
+            return new(0f, 0f, 0f);
+
         var input = _input.Game.Movement.ReadValue<Vector2>();
         var throttle = Mathf.Clamp01(input.y);
         var brake = Mathf.Clamp01(-input.y);

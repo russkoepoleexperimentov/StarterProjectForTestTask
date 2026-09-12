@@ -19,5 +19,31 @@ MonoBehaviour:
   - 2.5
   - 1.73
   - 1
-  FinalDriveRatio: 3.23
+  <FinalDriveRatio>k__BackingField: 3.23
   <Type>k__BackingField: 0
+  <ShiftTimeSeconds>k__BackingField: 0.3
+  <MinTimeInGearSeconds>k__BackingField: 1
+  <AutoCalculateShiftPoints>k__BackingField: 0
+  <WheelRadiusMeters>k__BackingField: 0.35
+  <DownshiftHysteresis>k__BackingField: 0.85
+  <ShiftUpKph>k__BackingField:
+  - 2500
+  - 2500
+  - 2500
+  - 2500
+  - 2500
+  <ShiftDownKph>k__BackingField:
+  - 800
+  - 1500
+  - 800
+  - 800
+  - 800
+  <ReverseShiftUpKph>k__BackingField: []
+  <ReverseShiftDownKph>k__BackingField: []
+  <EconomyShiftFactor>k__BackingField: 0.6
+  <SportShiftFactor>k__BackingField: 1.15
+  <RedlineShiftMargin>k__BackingField: 0.97
+  <KickdownThrottleDelta>k__BackingField: 0.5
+  <KickdownWindowSeconds>k__BackingField: 0.15
+  <KickdownMinThrottle>k__BackingField: 0.8
+  <KickdownRpmHeadroom>k__BackingField: 0

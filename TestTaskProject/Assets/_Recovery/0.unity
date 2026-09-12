@@ -67020,7 +67020,6 @@ MonoBehaviour:
   _carView: {fileID: 658395891}
   _engineConfig: {fileID: 11400000, guid: 4f4fb4c29897b9a4bb8b89d1939c1d53, type: 2}
   _gearboxConfig: {fileID: 11400000, guid: 02e97e3b2d316ee4ba64976ac658662c, type: 2}
-  _gearboxUsageConfig: {fileID: 11400000, guid: 221b903b01a9e184caf006855709e9c1, type: 2}
   _input: {fileID: 658395893}
   _isPlayerCar: 1
 --- !u!114 &658395890
@@ -67057,7 +67056,6 @@ MonoBehaviour:
   _driveWheels:
   - {fileID: 145183366}
   - {fileID: 1270163160}
-  _centerOfMass: {fileID: 1469214726}
 --- !u!54 &658395892
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -67066,7 +67064,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658395887}
   serializedVersion: 5
-  m_Mass: 500
+  m_Mass: 1500
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -67078,7 +67076,7 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 0
+  m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -70402,9 +70400,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4013073016293618, guid: 02e641040fb499c49a848e40f535164a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1407984267}
-    - targetCorrespondingSourceObject: {fileID: 4013073016293618, guid: 02e641040fb499c49a848e40f535164a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1469214726}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1610265466720824, guid: 02e641040fb499c49a848e40f535164a, type: 3}
       insertIndex: -1
@@ -157945,37 +157940,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &1469214725
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1469214726}
-  m_Layer: 0
-  m_Name: COM
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1469214726
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1469214725}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.179, z: 0.585}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 658395888}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1469276121
 PrefabInstance:
   m_ObjectHideFlags: 0

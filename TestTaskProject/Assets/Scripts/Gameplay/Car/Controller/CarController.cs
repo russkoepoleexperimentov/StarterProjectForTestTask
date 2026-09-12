@@ -14,9 +14,9 @@ public class CarController : IFixedTickable {
 
     public void FixedTick()
     {
-          var input  = _input.Read();
-          var output = _drivetrainModel.Tick(input, _view.AverageWheelsRpm, Time.fixedDeltaTime);
+        var input  = _input.Read();
+        var output = _drivetrainModel.Tick(input, _view.AverageWheelsRpm, _view.SpeedKph, Time.fixedDeltaTime);
 
-          _view.ApplyDrive(output);
+        _view.ApplyDrive(output);
     }
 }

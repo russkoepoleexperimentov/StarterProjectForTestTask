@@ -1,31 +1,45 @@
+using Gameplay.Car.Configs;
 using UnityEngine;
 
-public class DrivetrainModel 
+public class DrivetrainModel
 {
     private readonly EngineConfig _engineConfig;
     private readonly GearboxConfig _gearboxConfig;
-
-    private readonly float _bestShiftUpRpm;
-    private readonly float _bestShiftDownRpm;
+    private readonly GearboxUsageConfig _gearboxUsageConfig;
+    private readonly CarStateModel _stateModel;
 
     private int _currentGear;
     private float _engineRpm;
+    private float _shiftTimer;
+    private float _gearHoldTimer;
 
-    public DrivetrainModel(EngineConfig engineConfig, GearboxConfig gearboxConfig)
+    private float _throttleAtWindowStart;
+    private float _kickdownWindowTimer;
+
+    private const float INPUT_THRESHOLD = 0.2f;
+    private const float STANDSTILL_SPEED_KPH = 1f;
+    private const float RPM_ADJUST_SMOOTHNESS = 0.3f;
+    
+    private float _velocity = 0f;
+
+    public DrivetrainModel(EngineConfig engineConfig, GearboxConfig gearboxConfig, GearboxUsageConfig gearboxUsageConfig, CarStateModel stateModel)
     {
         _engineConfig = engineConfig;
         _gearboxConfig = gearboxConfig;
-        _currentGear = 0;
+        _gearboxUsageConfig = gearboxUsageConfig;
+        _stateModel = stateModel;
 
-        _bestShiftDownRpm = GetBestShiftDownRPM();
-        _bestShiftUpRpm = GetBestShiftUpRPM();
+        _currentGear = 0;
+        _engineRpm = _engineConfig.IdleRPM;
     }
 
-    public DrivetrainOutputModel Tick(DrivetrainInputModel input, float averageWheelsRpm, float deltaTime)
+    public DrivetrainOutputModel Tick(DrivetrainInputModel input, float averageWheelsRpm, float speedKph, float deltaTime)
     {
-        UpdateShifting(_engineRpm, input.Throttle, input.Brake);
-
-        var throttle = input.Throttle;
+        // чтобы при игре с клавиатуры лучше контроллировать разгон
+        var throttleCorretionFactor = 1 - Mathf.InverseLerp(_engineConfig.IdleRPM, _engineConfig.RedlineRPM, _engineRpm);
+        throttleCorretionFactor *= throttleCorretionFactor;
+        
+        var throttle = input.Throttle * throttleCorretionFactor;
         var brake = input.Brake;
 
         if(_currentGear < 0)
@@ -33,81 +47,118 @@ public class DrivetrainModel
             (throttle, brake) = (brake, throttle);
         }
 
-        var torque = EvaluateTorque(_engineRpm) * throttle;
+        var isShifting = _shiftTimer > 0f;
+        var torque = isShifting ? 0f : EvaluateTorque(_engineRpm) * throttle;
         var frictionTorque = EvaluateFrictionTorque(_engineRpm);
         var netTorque = torque - frictionTorque;
+        
+        
+        UpdateShifting(input.Throttle, input.Brake, speedKph, torque, deltaTime);
 
         var producedTorque = 0f;
+        var newRpm = 0f;
 
-        if(_currentGear == 0) 
+        if(_currentGear == 0 || isShifting)
         {
-            _engineRpm += netTorque * deltaTime / _engineConfig.InertiaKgM;
+            newRpm = _engineRpm + netTorque * deltaTime / _engineConfig.InertiaKgM;
         }
-        else 
+        else
         {
-            var ratio = GetCurrentGearRatio();
-
-            var wheelsRpm = averageWheelsRpm * ratio;
-            _engineRpm = wheelsRpm;
-
-            producedTorque = torque;
+            var ratio = GetGearRatio(_currentGear);
+            
+            newRpm = averageWheelsRpm * ratio;
+            producedTorque = torque * ratio;
         }
+
+        _engineRpm = Mathf.SmoothDamp(_engineRpm, newRpm, ref _velocity, 
+            deltaTime * RPM_ADJUST_SMOOTHNESS);
+        
+        // clutch start simulation =))
+        float minClutchRPM = _engineConfig.IdleRPM;
+        if (Mathf.Abs(_currentGear) == 1) // 1 or R1
+            minClutchRPM += throttle * 1500;
+        if (_engineRpm < minClutchRPM)
+            _engineRpm = minClutchRPM;
 
         _engineRpm = Mathf.Clamp(_engineRpm, _engineConfig.IdleRPM, _engineConfig.RedlineRPM);
+
+        _stateModel.Set(_engineRpm, speedKph, _currentGear);
 
         return new DrivetrainOutputModel(producedTorque, 0, 0);
     }
 
-    private float GetCurrentGearRatio() 
+    private float GetGearRatio(int gear)
     {
-        if(_currentGear >= _gearboxConfig.ForwardGearRatios.Length || 
-            -_currentGear > _gearboxConfig.BackwardGearRatios.Length) 
-            return 0;
+        if(gear == 0) return 0;
 
-        if(_currentGear == 0) return 0; // neutral gear case
+        var set = gear < 0 ? _gearboxConfig.BackwardGearRatios : _gearboxConfig.ForwardGearRatios;
+        var index = Mathf.Abs(gear) - 1;
 
-        if(_currentGear > 0) 
-            return _gearboxConfig.ForwardGearRatios[_currentGear] * _gearboxConfig.FinalDriveRatio;
-
-        return _gearboxConfig.BackwardGearRatios[-_currentGear] * _gearboxConfig.FinalDriveRatio;
+        return set[index] * _gearboxConfig.FinalDriveRatio;
     }
 
-    private void UpdateShifting(float currentRpm, float rawThrottle, float rawBrake) 
+    private void UpdateShifting(float forwardInput, float backwardInput, float speedKph, float torque, float deltaTime)
     {
-        if(_currentGear != 0) 
+        if(_shiftTimer > 0f)
         {
-            if(currentRpm > _bestShiftUpRpm){
-                ShiftRelative(1);
-            }
-            else if(currentRpm > _bestShiftDownRpm) {
-                ShiftRelative(-1);
-            }
+            _shiftTimer -= deltaTime;
+            return;
         }
-        else 
+
+        if(_gearHoldTimer > 0f)
+            _gearHoldTimer -= deltaTime;
+
+        var isIdleInput = forwardInput < INPUT_THRESHOLD && backwardInput < INPUT_THRESHOLD;
+        var isStanding = Mathf.Abs(speedKph) < STANDSTILL_SPEED_KPH;
+
+        if (isIdleInput && isStanding)
         {
-            const float inputThreshold = 0.2f;
-            int desiredDirection = rawThrottle < inputThreshold && rawBrake < inputThreshold ? 0 :
-                rawThrottle > rawBrake ? 1 : -1;
+            // включаем нейтраль
+            SetGear(0);
+            return;
+        }
 
-            if(desiredDirection > 0)
-                ShiftAbsolute(1);
-            else if (desiredDirection < 0)
-                ShiftAbsolute(-1);
+        if(_currentGear == 0 && !isIdleInput)
+        {   
+            // на нейтрали стартуем вперёд/назад в зависимости куда едем
+            SetGear(forwardInput > backwardInput ? 1 : -1);
+            return;
+        }
+        
+        if(_shiftTimer > 0 || _gearHoldTimer > 0) return;
+
+        var throttleInput = speedKph > 0 ? forwardInput : backwardInput;
+        var absShiftDirection = _currentGear > 0 ? 1 : -1;
+        var relMaxGear = _currentGear > 0 ? _gearboxConfig.ForwardGearRatios.Length : _gearboxConfig.BackwardGearRatios.Length;
+        var relGear = Mathf.Abs(_currentGear);
+
+        var torqueAtIdle = EvaluateTorque(_engineConfig.IdleRPM);
+        
+        var shouldShiftUp = throttleInput > 0 && _engineRpm > _gearboxUsageConfig.ShiftUpRPM && relGear < relMaxGear;
+        var shouldShiftDown = torque < torqueAtIdle && _engineRpm < _gearboxUsageConfig.ShiftDownRPM && relGear > 1;
+
+        if (shouldShiftDown)
+        {
+            SetGear(_currentGear - absShiftDirection);
+            return;
+        }
+
+        if (shouldShiftUp)
+        {
+            SetGear(_currentGear + absShiftDirection);
         }
     }
 
-    private void ShiftRelative(int direction) {
-        var maxGear = _currentGear > 0 ? _gearboxConfig.ForwardGearRatios.Length - 1 : _gearboxConfig.BackwardGearRatios.Length - 1;
-        _currentGear = (int)Mathf.Sign(_currentGear) * Mathf.Clamp(Mathf.Abs(_currentGear) + (int)Mathf.Sign(direction), 0, maxGear);
+    private void SetGear(int gear)
+    {
+        if(gear == _currentGear) return;
+
+        _currentGear = gear;
+        _shiftTimer = _gearboxUsageConfig.ShiftTimeSeconds;
+        _gearHoldTimer = _gearboxUsageConfig.MinTimeInGearSeconds;
     }
 
-    private void ShiftAbsolute(int direction) {
-        var minGear = -(_gearboxConfig.BackwardGearRatios.Length - 1);
-        var maxGear = _gearboxConfig.ForwardGearRatios.Length - 1;
-        _currentGear = (int)Mathf.Clamp(_currentGear + (int)Mathf.Sign(direction), minGear, maxGear);
-    }
-
-    private float EvaluateTorque(float engineRpm) 
+    private float EvaluateTorque(float engineRpm)
     {
         float rpm = Mathf.Max(0f, engineRpm);
 
@@ -118,15 +169,9 @@ public class DrivetrainModel
         if (rpm <= 0f)
             return 0f;
 
-        if (rpm < _engineConfig.IdleRPM)
-        {
-            float t = rpm / _engineConfig.IdleRPM;
-            return Mathf.Lerp(0f, _engineConfig.MaxTorqueNm * _engineConfig.IdleTorqueFraction, t);
-        }
-
         if (rpm <= _engineConfig.MaxTorqueRPM)
         {
-            float t = Mathf.InverseLerp(_engineConfig.IdleRPM, _engineConfig.MaxTorqueRPM, rpm);
+            float t = Mathf.InverseLerp(0, _engineConfig.MaxTorqueRPM, rpm);
             return Mathf.Lerp(_engineConfig.MaxTorqueNm * _engineConfig.IdleTorqueFraction, _engineConfig.MaxTorqueNm, t);
         }
 
@@ -148,7 +193,4 @@ public class DrivetrainModel
     private float EvaluateFrictionTorque(float engineRpm) {
         return _engineConfig.BaseFriction + engineRpm * _engineConfig.RPMFriction;
     }
-
-    private float GetBestShiftUpRPM() => 2500; // todo
-    private float GetBestShiftDownRPM() => 800; // todo
 }

@@ -8,6 +8,7 @@ public class CarInstaller : MonoInstaller
     [SerializeField] private EngineConfig _engineConfig;
     [SerializeField] private GearboxConfig _gearboxConfig;
     [SerializeField] private GearboxUsageConfig _gearboxUsageConfig;
+    [SerializeField] private CarSystemsConfig _carSystemsConfig;
     [SerializeField] private UserInputView _input;
     [SerializeField] private bool _isPlayerCar = true;
 
@@ -16,6 +17,7 @@ public class CarInstaller : MonoInstaller
         Container.Bind<EngineConfig>().FromInstance(_engineConfig).AsSingle();
         Container.Bind<GearboxConfig>().FromInstance(_gearboxConfig).AsSingle();
         Container.Bind<GearboxUsageConfig>().FromInstance(_gearboxUsageConfig).AsSingle();
+        Container.Bind<CarSystemsConfig>().FromInstance(_carSystemsConfig).AsSingle();
         Container.Bind<CarView>().FromInstance(_carView).AsSingle();
 
         Container.Bind<IInputSource>().FromInstance(_input).AsSingle();

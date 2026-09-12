@@ -7,6 +7,7 @@ public class DrivetrainModel
     private readonly GearboxConfig _gearboxConfig;
     private readonly GearboxUsageConfig _gearboxUsageConfig;
     private readonly CarStateModel _stateModel;
+    private readonly CarSystemsConfig _carSystemsConfig;
 
     private int _currentGear;
     private float _engineRpm;
@@ -20,14 +21,21 @@ public class DrivetrainModel
     private const float STANDSTILL_SPEED_KPH = 1f;
     private const float RPM_ADJUST_SMOOTHNESS = 0.3f;
     
-    private float _velocity = 0f;
+    private float _velocity;
 
-    public DrivetrainModel(EngineConfig engineConfig, GearboxConfig gearboxConfig, GearboxUsageConfig gearboxUsageConfig, CarStateModel stateModel)
+    public DrivetrainModel(
+        EngineConfig engineConfig, 
+        GearboxConfig gearboxConfig, 
+        GearboxUsageConfig gearboxUsageConfig, 
+        CarStateModel stateModel, 
+        CarSystemsConfig carSystemsConfig
+        )
     {
         _engineConfig = engineConfig;
         _gearboxConfig = gearboxConfig;
         _gearboxUsageConfig = gearboxUsageConfig;
         _stateModel = stateModel;
+        _carSystemsConfig = carSystemsConfig;
 
         _currentGear = 0;
         _engineRpm = _engineConfig.IdleRPM;
@@ -56,7 +64,7 @@ public class DrivetrainModel
         UpdateShifting(input.Throttle, input.Brake, speedKph, torque, deltaTime);
 
         var producedTorque = 0f;
-        var newRpm = 0f;
+        float newRpm;
 
         if(_currentGear == 0 || isShifting)
         {
@@ -83,8 +91,12 @@ public class DrivetrainModel
         _engineRpm = Mathf.Clamp(_engineRpm, _engineConfig.IdleRPM, _engineConfig.RedlineRPM);
 
         _stateModel.Set(_engineRpm, speedKph, _currentGear);
+        
+        // systems
+        var brakeTorque = brake * _carSystemsConfig.MaxBrakeTorque;
+        var steerAngle = input.Steering * _carSystemsConfig.MaxSteerAngle;
 
-        return new DrivetrainOutputModel(producedTorque, 0, 0);
+        return new DrivetrainOutputModel(producedTorque, brakeTorque, steerAngle);
     }
 
     private float GetGearRatio(int gear)

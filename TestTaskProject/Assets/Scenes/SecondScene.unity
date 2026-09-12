@@ -67059,6 +67059,7 @@ MonoBehaviour:
   _engineConfig: {fileID: 11400000, guid: 4f4fb4c29897b9a4bb8b89d1939c1d53, type: 2}
   _gearboxConfig: {fileID: 11400000, guid: 02e97e3b2d316ee4ba64976ac658662c, type: 2}
   _gearboxUsageConfig: {fileID: 11400000, guid: 221b903b01a9e184caf006855709e9c1, type: 2}
+  _carSystemsConfig: {fileID: 11400000, guid: 2be59404f7490904eb6306051bf9edf7, type: 2}
   _input: {fileID: 658395893}
   _isPlayerCar: 1
 --- !u!114 &658395890
@@ -67096,9 +67097,15 @@ MonoBehaviour:
   - <LeftWheel>k__BackingField: {fileID: 145183367}
     <RightWheel>k__BackingField: {fileID: 1270163161}
     <IsDrivable>k__BackingField: 1
+    _brakeFactor: 0.65
+    _handBrakeFactor: 0
+    _steerFactor: 1
   - <LeftWheel>k__BackingField: {fileID: 1456073557}
     <RightWheel>k__BackingField: {fileID: 115063166}
     <IsDrivable>k__BackingField: 0
+    _brakeFactor: 0.35
+    _handBrakeFactor: 1
+    _steerFactor: 0
   _centerOfMass: {fileID: 1469214726}
 --- !u!54 &658395892
 Rigidbody:

@@ -10,6 +10,13 @@ public class CarView : MonoBehaviour
         [field: SerializeField] public CarWheelView LeftWheel { get; private set; }
         [field: SerializeField] public CarWheelView RightWheel { get; private set; }
         [field: SerializeField] public bool IsDrivable { get; private set; }
+        [SerializeField] private float _brakeFactor = 1;
+        [SerializeField] private float _handBrakeFactor = 0;
+        [SerializeField] private float _steerFactor = 1;
+        
+        public float BrakeFactor => _brakeFactor;
+        public float HandBrakeFactor => _handBrakeFactor;
+        public float SteerFactor => _steerFactor;
     }
     
     [SerializeField] private Rigidbody _rigidbody;
@@ -67,13 +74,20 @@ public class CarView : MonoBehaviour
         {
             if (axle.IsDrivable)
             {
-                axle.LeftWheel.Collider.motorTorque = drivetrainOutput.MotorTorque * fraction;
-                axle.RightWheel.Collider.motorTorque = drivetrainOutput.MotorTorque * fraction;
+                ApplyForBothWheels(axle, w => w.Collider.motorTorque = drivetrainOutput.MotorTorque * fraction);
             }
             
-            axle.LeftWheel.ApplyVisual();
-            axle.RightWheel.ApplyVisual();
+            ApplyForBothWheels(axle, w => w.Collider.brakeTorque = axle.BrakeFactor * drivetrainOutput.BrakeTorque);
+            ApplyForBothWheels(axle, w => w.Collider.steerAngle = axle.SteerFactor * drivetrainOutput.SteerAngle);
+            
+            ApplyForBothWheels(axle, w => w.ApplyVisual());
         }
+    }
+
+    private void ApplyForBothWheels(Axle axle, Action<CarWheelView> func)
+    {
+        func(axle.LeftWheel);
+        func(axle.RightWheel);
     }
 
     private void Reset()

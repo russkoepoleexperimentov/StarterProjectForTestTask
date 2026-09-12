@@ -8303,6 +8303,11 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!4 &89115944 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4252074655309166, guid: 02e641040fb499c49a848e40f535164a, type: 3}
+  m_PrefabInstance: {fileID: 683000846}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &89410227
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11063,6 +11068,7 @@ GameObject:
   m_Component:
   - component: {fileID: 115063164}
   - component: {fileID: 115063165}
+  - component: {fileID: 115063166}
   m_Layer: 0
   m_Name: RightRear
   m_TagString: Untagged
@@ -11124,6 +11130,19 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!114 &115063166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115063163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
+  _visual: {fileID: 1404575258}
 --- !u!1001 &115992503
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13591,6 +13610,7 @@ GameObject:
   m_Component:
   - component: {fileID: 145183365}
   - component: {fileID: 145183366}
+  - component: {fileID: 145183367}
   m_Layer: 0
   m_Name: LeftFront
   m_TagString: Untagged
@@ -13652,6 +13672,19 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!114 &145183367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145183364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
+  _visual: {fileID: 724868045}
 --- !u!1001 &146133498
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41707,6 +41740,11 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!4 &401325171 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4068913174666622, guid: 02e641040fb499c49a848e40f535164a, type: 3}
+  m_PrefabInstance: {fileID: 683000846}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &402905305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67054,9 +67092,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Gameplay::CarView
   _rigidbody: {fileID: 658395892}
-  _driveWheels:
-  - {fileID: 145183366}
-  - {fileID: 1270163160}
+  _axles:
+  - <LeftWheel>k__BackingField: {fileID: 145183367}
+    <RightWheel>k__BackingField: {fileID: 1270163161}
+    <IsDrivable>k__BackingField: 1
+  - <LeftWheel>k__BackingField: {fileID: 1456073557}
+    <RightWheel>k__BackingField: {fileID: 115063166}
+    <IsDrivable>k__BackingField: 0
   _centerOfMass: {fileID: 1469214726}
 --- !u!54 &658395892
 Rigidbody:
@@ -73849,6 +73891,11 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!4 &724868045 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4429808383623004, guid: 02e641040fb499c49a848e40f535164a, type: 3}
+  m_PrefabInstance: {fileID: 683000846}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &725569111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -135143,6 +135190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1270163159}
   - component: {fileID: 1270163160}
+  - component: {fileID: 1270163161}
   m_Layer: 0
   m_Name: RightFront
   m_TagString: Untagged
@@ -135204,6 +135252,19 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!114 &1270163161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270163158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
+  _visual: {fileID: 401325171}
 --- !u!1001 &1272093554
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -150964,6 +151025,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6744948774040422585, guid: f0fa6751ecba8a44b87f542ef29ff46f, type: 3}
   m_PrefabInstance: {fileID: 1404506034}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1404575258 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4944351361650126, guid: 02e641040fb499c49a848e40f535164a, type: 3}
+  m_PrefabInstance: {fileID: 683000846}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1404607421
 GameObject:
   m_ObjectHideFlags: 0
@@ -156934,6 +157000,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1456073555}
   - component: {fileID: 1456073556}
+  - component: {fileID: 1456073557}
   m_Layer: 0
   m_Name: LeftRear
   m_TagString: Untagged
@@ -156995,6 +157062,19 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!114 &1456073557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456073554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
+  _visual: {fileID: 89115944}
 --- !u!1001 &1456546278
 PrefabInstance:
   m_ObjectHideFlags: 0

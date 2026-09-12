@@ -1,22 +1,51 @@
+using System;
+using Gameplay.Car.View;
 using UnityEngine;
 
 public class CarView : MonoBehaviour 
 {
+    [Serializable]
+    public class Axle
+    {
+        [field: SerializeField] public CarWheelView LeftWheel { get; private set; }
+        [field: SerializeField] public CarWheelView RightWheel { get; private set; }
+        [field: SerializeField] public bool IsDrivable { get; private set; }
+    }
+    
     [SerializeField] private Rigidbody _rigidbody;
-    [SerializeField] private WheelCollider[] _driveWheels;
+    [SerializeField] private Axle[] _axles;
     [SerializeField] private Transform _centerOfMass;
 
     public float SpeedKph => Vector3.Dot(_rigidbody.linearVelocity, _rigidbody.transform.forward) * MPS_TO_KPH;
-    public int NumDriveWheels => _driveWheels.Length;
+
+    public int NumDriveWheels
+    {
+        get
+        {
+            int result = 0;
+            foreach (var axle in _axles)
+            {
+                if (axle.IsDrivable)
+                {
+                    result += 2;
+                }
+            }
+            return result;
+        }
+    }
 
     public float AverageWheelsRpm {
         get {
             float rpm = 0;
-            foreach (var wheel in _driveWheels)
+            foreach (var axle in _axles)
             {
-                rpm += wheel.rpm;
+                if (axle.IsDrivable)
+                {
+                    rpm += axle.LeftWheel.Collider.rpm;
+                    rpm += axle.RightWheel.Collider.rpm;
+                }
             }
-            return rpm / Mathf.Max(_driveWheels.Length, 1);
+            return rpm / Mathf.Max(NumDriveWheels, 1);
         }
     }
 
@@ -32,9 +61,18 @@ public class CarView : MonoBehaviour
 
     public void ApplyDrive(DrivetrainOutputModel drivetrainOutput) 
     {
-        foreach (var wheel in _driveWheels)
+        float fraction = 1f / NumDriveWheels;
+        
+        foreach (Axle axle in _axles)
         {
-            wheel.motorTorque = drivetrainOutput.MotorTorque * _driveWheels.Length;
+            if (axle.IsDrivable)
+            {
+                axle.LeftWheel.Collider.motorTorque = drivetrainOutput.MotorTorque * fraction;
+                axle.RightWheel.Collider.motorTorque = drivetrainOutput.MotorTorque * fraction;
+            }
+            
+            axle.LeftWheel.ApplyVisual();
+            axle.RightWheel.ApplyVisual();
         }
     }
 

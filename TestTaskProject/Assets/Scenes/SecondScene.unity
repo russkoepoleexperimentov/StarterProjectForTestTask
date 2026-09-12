@@ -67056,11 +67056,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Gameplay::CarInstaller
   _carView: {fileID: 658395891}
+  _carAudioView: {fileID: 658395894}
+  _input: {fileID: 658395893}
   _engineConfig: {fileID: 11400000, guid: 4f4fb4c29897b9a4bb8b89d1939c1d53, type: 2}
   _gearboxConfig: {fileID: 11400000, guid: 02e97e3b2d316ee4ba64976ac658662c, type: 2}
   _gearboxUsageConfig: {fileID: 11400000, guid: 221b903b01a9e184caf006855709e9c1, type: 2}
   _carSystemsConfig: {fileID: 11400000, guid: 2be59404f7490904eb6306051bf9edf7, type: 2}
-  _input: {fileID: 658395893}
+  _audioConfig: {fileID: 11400000, guid: 00d1491975361cb4fa6c3c2d1d174ac4, type: 2}
   _isPlayerCar: 1
 --- !u!114 &658395890
 MonoBehaviour:
@@ -67146,6 +67148,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f803507742a481c4daaf3e1324084dd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::UserInputView
+--- !u!114 &658395894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658395887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac898751ae4647a698339628515efae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarAudioView
 --- !u!1001 &661557811
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -70470,6 +70484,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1610265466720824, guid: 02e641040fb499c49a848e40f535164a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 658395893}
+    - targetCorrespondingSourceObject: {fileID: 1610265466720824, guid: 02e641040fb499c49a848e40f535164a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 658395894}
     - targetCorrespondingSourceObject: {fileID: 1256625469714818, guid: 02e641040fb499c49a848e40f535164a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1634934173}

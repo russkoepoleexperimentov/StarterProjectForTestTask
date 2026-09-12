@@ -17,12 +17,15 @@ public class DrivetrainModel
     private bool _passiveBraking; // механика пассивного торможения
     private float _calculatedSteeringInput;
 
+    private float _clutchEngagement; // 0 - сцепление выжато, 1 - схвачено полностью
+    private float _clutchTimeRamp;   // прогресс выпускания педали сцепления
+
     private float _throttleAtWindowStart;
     private float _kickdownWindowTimer;
 
     private const float INPUT_THRESHOLD = 0.2f;
     private const float STANDSTILL_SPEED_KPH = 1f;
-    private const float RPM_ADJUST_SMOOTHNESS = 0.3f;
+    private const float RPM_ADJUST_SMOOTHNESS = 3;
     
     private float _velocity;
 
@@ -47,8 +50,6 @@ public class DrivetrainModel
     public DrivetrainOutputModel Tick(DrivetrainInputModel input, float averageWheelsRpm, float speedKph, float deltaTime)
     {
         CalculateEngineAndTransmission(input, averageWheelsRpm, speedKph, deltaTime,  out var throttle, out var brake, out var producedTorque);
-
-        _stateModel.Set(_engineRpm, speedKph, _currentGear);
         
         // braking
         if (brake > INPUT_THRESHOLD) _passiveBraking = true;
@@ -56,7 +57,7 @@ public class DrivetrainModel
         if (_currentGear == 0) _passiveBraking = false;
 
         var passiveBrakingInput = _passiveBraking ? 0.2f : 0;
-        var brakeInput = Mathf.Max(passiveBrakingInput, input.Brake);
+        var brakeInput = Mathf.Max(passiveBrakingInput, brake);
         
         var brakeTorque = brakeInput * _carSystemsConfig.MaxBrakeTorque;
 
@@ -76,6 +77,8 @@ public class DrivetrainModel
         }
         
         var steerAngle = _calculatedSteeringInput * _carSystemsConfig.MaxSteerAngle;
+        
+        _stateModel.Set(_engineRpm, speedKph, _currentGear, throttle);
 
         return new DrivetrainOutputModel(producedTorque, brakeTorque, steerAngle);
     }
@@ -87,13 +90,15 @@ public class DrivetrainModel
         var throttleCorretionFactor = 1 - Mathf.InverseLerp(_engineConfig.IdleRPM, _engineConfig.RedlineRPM, _engineRpm);
         throttleCorretionFactor *= throttleCorretionFactor;
         
-        throttle = input.Throttle * throttleCorretionFactor;
+        throttle = input.Throttle;
         brake = input.Brake;
 
         if(_currentGear < 0)
         {
             (throttle, brake) = (brake, throttle);
         }
+
+        throttle *= throttleCorretionFactor;
 
         var isShifting = _shiftTimer > 0f;
         var torque = isShifting ? 0f : EvaluateTorque(_engineRpm) * throttle;
@@ -103,32 +108,67 @@ public class DrivetrainModel
         
         UpdateShifting(input.Throttle, input.Brake, speedKph, torque, deltaTime);
 
+        UpdateClutch(speedKph, isShifting, deltaTime);
+
         producedTorque = 0f;
         float newRpm;
 
+        // обороты на свободном двигателе (сцепление выжато)
+        var freeRpm = _engineRpm + netTorque * deltaTime / _engineConfig.InertiaKgM;
+
         if(_currentGear == 0 || isShifting)
         {
-            newRpm = _engineRpm + netTorque * deltaTime / _engineConfig.InertiaKgM;
+            newRpm = freeRpm;
         }
         else
         {
             var ratio = GetGearRatio(_currentGear);
-            
-            newRpm = averageWheelsRpm * ratio;
-            producedTorque = torque * ratio;
+
+            // чем сильнее буксует сцепление, тем меньше двигатель привязан к колёсам
+            newRpm = Mathf.Lerp(freeRpm, averageWheelsRpm * ratio, _clutchEngagement);
+
+            producedTorque = torque * ratio * _clutchEngagement;
+
+            // пока сцепление не схвачено, момент на колёсах ограничен - иначе срыв в букс
+            if (_clutchEngagement < 1f)
+            {
+                var limit = _gearboxUsageConfig.MaxLaunchTorqueNm;
+                producedTorque = Mathf.Clamp(producedTorque, -limit, limit);
+            }
         }
 
         _engineRpm = Mathf.SmoothDamp(_engineRpm, newRpm, ref _velocity, 
             deltaTime * RPM_ADJUST_SMOOTHNESS);
-        
-        // clutch start simulation =))
-        float minClutchRPM = _engineConfig.IdleRPM;
-        if (Mathf.Abs(_currentGear) == 1) // 1 or R1
-            minClutchRPM += throttle * 1500;
-        if (_engineRpm < minClutchRPM)
-            _engineRpm = minClutchRPM;
 
         _engineRpm = Mathf.Clamp(_engineRpm, _engineConfig.IdleRPM, _engineConfig.RedlineRPM);
+    }
+
+    private void UpdateClutch(float speedKph, bool isShifting, float deltaTime)
+    {
+        if (_currentGear == 0 || isShifting)
+        {
+            _clutchEngagement = 0f;
+            _clutchTimeRamp = 0f;
+            return;
+        }
+
+        var engageSpeed = _gearboxUsageConfig.ClutchEngageTimeSeconds > 0f
+            ? deltaTime / _gearboxUsageConfig.ClutchEngageTimeSeconds
+            : 1f;
+
+        var target = 1f;
+
+        // трогание с места: сцепление держим подбуксовывающим, пока машина не разогналась
+        if (Mathf.Abs(_currentGear) == 1 && _gearboxUsageConfig.ClutchLockSpeedKph > 0f)
+        {
+            var speedFactor = Mathf.Clamp01(Mathf.Abs(speedKph) / _gearboxUsageConfig.ClutchLockSpeedKph);
+            target = Mathf.Lerp(_gearboxUsageConfig.MinClutchEngagement, 1f, speedFactor);
+        }
+
+        _clutchTimeRamp = Mathf.MoveTowards(_clutchTimeRamp, 1f, engageSpeed);
+
+        // сцепление схватывается не быстрее, чем позволяют и таймер, и набранная скорость
+        _clutchEngagement = Mathf.Min(_clutchTimeRamp, target);
     }
 
     private float GetGearRatio(int gear)

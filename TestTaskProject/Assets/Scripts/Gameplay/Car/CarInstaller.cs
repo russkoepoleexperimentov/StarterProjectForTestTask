@@ -1,15 +1,23 @@
 using Gameplay.Car.Configs;
+using Gameplay.Car.Controller;
+using Gameplay.Car.Model;
+using Gameplay.Car.View;
 using UnityEngine;
 using Zenject;
 
 public class CarInstaller : MonoInstaller
 {
     [SerializeField] private CarView _carView;
+    [SerializeField] private CarAudioView _carAudioView;
+    [SerializeField] private UserInputView _input;
+    
     [SerializeField] private EngineConfig _engineConfig;
     [SerializeField] private GearboxConfig _gearboxConfig;
     [SerializeField] private GearboxUsageConfig _gearboxUsageConfig;
     [SerializeField] private CarSystemsConfig _carSystemsConfig;
-    [SerializeField] private UserInputView _input;
+    
+    [SerializeField] private CarAudioConfig _audioConfig;
+    
     [SerializeField] private bool _isPlayerCar = true;
 
     public override void InstallBindings()
@@ -24,6 +32,11 @@ public class CarInstaller : MonoInstaller
 
         Container.Bind<DrivetrainModel>().AsSingle();
         Container.Bind<CarStateModel>().AsSingle();
+        
+        Container.Bind<CarAudioConfig>().FromInstance(_audioConfig).AsSingle();
+        Container.BindInterfacesAndSelfTo<CarAudioController>().AsSingle();
+        Container.Bind<CarAudioModel>().AsSingle();
+        Container.Bind<CarAudioView>().FromInstance(_carAudioView).AsSingle();
 
         Container.BindInterfacesAndSelfTo<CarController>().AsSingle();
 

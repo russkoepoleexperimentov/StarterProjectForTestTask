@@ -16,3 +16,7 @@ MonoBehaviour:
   <MinTimeInGearSeconds>k__BackingField: 1
   <ShiftDownRPM>k__BackingField: 1000
   <ShiftUpRPM>k__BackingField: 2500
+  <ClutchEngageTimeSeconds>k__BackingField: 1.2
+  <ClutchLockSpeedKph>k__BackingField: 15
+  <MinClutchEngagement>k__BackingField: 0.15
+  <MaxLaunchTorqueNm>k__BackingField: 2500

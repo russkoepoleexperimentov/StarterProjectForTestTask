@@ -14,6 +14,9 @@ public class DrivetrainModel
     private float _shiftTimer;
     private float _gearHoldTimer;
 
+    private bool _passiveBraking; // механика пассивного торможения
+    private float _calculatedSteeringInput;
+
     private float _throttleAtWindowStart;
     private float _kickdownWindowTimer;
 
@@ -43,12 +46,49 @@ public class DrivetrainModel
 
     public DrivetrainOutputModel Tick(DrivetrainInputModel input, float averageWheelsRpm, float speedKph, float deltaTime)
     {
+        CalculateEngineAndTransmission(input, averageWheelsRpm, speedKph, deltaTime,  out var throttle, out var brake, out var producedTorque);
+
+        _stateModel.Set(_engineRpm, speedKph, _currentGear);
+        
+        // braking
+        if (brake > INPUT_THRESHOLD) _passiveBraking = true;
+        if (throttle > INPUT_THRESHOLD) _passiveBraking = false;
+        if (_currentGear == 0) _passiveBraking = false;
+
+        var passiveBrakingInput = _passiveBraking ? 0.2f : 0;
+        var brakeInput = Mathf.Max(passiveBrakingInput, input.Brake);
+        
+        var brakeTorque = brakeInput * _carSystemsConfig.MaxBrakeTorque;
+
+        // steering
+        var speedSteerFactor = Mathf.Max(1f - Mathf.Clamp01(speedKph / 60), 0.3f);
+        var desiredSteerInput = speedSteerFactor * input.Steering;
+
+        if (Mathf.Abs(_calculatedSteeringInput) < Mathf.Abs(desiredSteerInput))
+        {
+            // доворачиваем руль
+            _calculatedSteeringInput = Mathf.MoveTowards(_calculatedSteeringInput, desiredSteerInput, deltaTime);
+        }
+        else
+        {
+            // возвращаем руль
+            _calculatedSteeringInput = Mathf.MoveTowards(_calculatedSteeringInput, desiredSteerInput, deltaTime * 3);
+        }
+        
+        var steerAngle = _calculatedSteeringInput * _carSystemsConfig.MaxSteerAngle;
+
+        return new DrivetrainOutputModel(producedTorque, brakeTorque, steerAngle);
+    }
+
+    private void CalculateEngineAndTransmission(DrivetrainInputModel input, float averageWheelsRpm, float speedKph,
+        float deltaTime, out float throttle, out float brake, out float producedTorque)
+    {
         // чтобы при игре с клавиатуры лучше контроллировать разгон
         var throttleCorretionFactor = 1 - Mathf.InverseLerp(_engineConfig.IdleRPM, _engineConfig.RedlineRPM, _engineRpm);
         throttleCorretionFactor *= throttleCorretionFactor;
         
-        var throttle = input.Throttle * throttleCorretionFactor;
-        var brake = input.Brake;
+        throttle = input.Throttle * throttleCorretionFactor;
+        brake = input.Brake;
 
         if(_currentGear < 0)
         {
@@ -63,7 +103,7 @@ public class DrivetrainModel
         
         UpdateShifting(input.Throttle, input.Brake, speedKph, torque, deltaTime);
 
-        var producedTorque = 0f;
+        producedTorque = 0f;
         float newRpm;
 
         if(_currentGear == 0 || isShifting)
@@ -89,14 +129,6 @@ public class DrivetrainModel
             _engineRpm = minClutchRPM;
 
         _engineRpm = Mathf.Clamp(_engineRpm, _engineConfig.IdleRPM, _engineConfig.RedlineRPM);
-
-        _stateModel.Set(_engineRpm, speedKph, _currentGear);
-        
-        // systems
-        var brakeTorque = brake * _carSystemsConfig.MaxBrakeTorque;
-        var steerAngle = input.Steering * _carSystemsConfig.MaxSteerAngle;
-
-        return new DrivetrainOutputModel(producedTorque, brakeTorque, steerAngle);
     }
 
     private float GetGearRatio(int gear)

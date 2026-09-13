@@ -1,13 +1,16 @@
 using UnityEngine;
 
-public class MainMenuView : ScreenView
+namespace Gameplay.UI
 {
-    public LoadSceneButton[] LoadSceneButtons => _loadSceneButtons ??= GetComponentsInChildren<LoadSceneButton>(true);
-
-    private LoadSceneButton[] _loadSceneButtons;
-
-    public override ScreenController Construct(EventManager eventManager)
+    public class MainMenuView : ScreenView
     {
-        return new MainMenuController(this, eventManager);
+        public LoadSceneButton[] LoadSceneButtons => _loadSceneButtons ??= GetComponentsInChildren<LoadSceneButton>(true);
+
+        private LoadSceneButton[] _loadSceneButtons;
+
+        public override ScreenController Construct(EventManager eventManager)
+        {
+            return new MainMenuController(this, eventManager);
+        }
     }
 }

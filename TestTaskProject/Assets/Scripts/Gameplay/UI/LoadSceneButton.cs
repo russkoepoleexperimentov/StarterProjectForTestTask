@@ -2,33 +2,36 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Button))]
-public class LoadSceneButton : MonoBehaviour
+namespace Gameplay.UI
 {
-    public string SceneName => _sceneName;
-    public string LoadingDescription => _loadingDescription;
-
-    public event Action<LoadSceneButton> Clicked;
-
-    [SerializeField] private string _sceneName;
-    [SerializeField] private string _loadingDescription;
-
-    private Button _button;
-
-    private void Awake()
+    [RequireComponent(typeof(Button))]
+    public class LoadSceneButton : MonoBehaviour
     {
-        _button = GetComponent<Button>();
-    }
+        public string SceneName => _sceneName;
+        public string LoadingDescription => _loadingDescription;
 
-    private void OnEnable()
-    {
-        _button.onClick.AddListener(HandleClick);
-    }
+        public event Action<LoadSceneButton> Clicked;
 
-    private void OnDisable()
-    {
-        _button.onClick.RemoveListener(HandleClick);
-    }
+        [SerializeField] private string _sceneName;
+        [SerializeField] private string _loadingDescription;
 
-    private void HandleClick() => Clicked?.Invoke(this);
+        private Button _button;
+
+        private void Awake()
+        {
+            _button = GetComponent<Button>();
+        }
+
+        private void OnEnable()
+        {
+            _button.onClick.AddListener(HandleClick);
+        }
+
+        private void OnDisable()
+        {
+            _button.onClick.RemoveListener(HandleClick);
+        }
+
+        private void HandleClick() => Clicked?.Invoke(this);
+    }
 }

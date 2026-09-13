@@ -1,14 +1,20 @@
-using Zenject;
+using Gameplay.Car.Presenter;
+using Gameplay.Car.Services;
+using Gameplay.Car.View;
 using UnityEngine;
+using Zenject;
 
-public class CarUIInstaller : MonoInstaller 
+namespace Gameplay.Car
 {
-    [SerializeField] private CarUIView _view;
-
-    public override void InstallBindings()
+    public class CarUIInstaller : MonoInstaller 
     {
-        Container.Bind<CarUIView>().FromInstance(_view).AsSingle();
-        Container.Bind<PlayerCarRegistry>().AsSingle();
-        Container.BindInterfacesAndSelfTo<CarUIController>().AsSingle();
+        [SerializeField] private CarUIView _view;
+
+        public override void InstallBindings()
+        {
+            Container.Bind<CarUIView>().FromInstance(_view).AsSingle();
+            Container.Bind<PlayerCarRegistry>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CarUIPresenter>().AsSingle();
+        }
     }
 }

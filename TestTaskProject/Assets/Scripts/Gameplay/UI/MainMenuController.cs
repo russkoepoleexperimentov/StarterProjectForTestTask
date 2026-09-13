@@ -1,33 +1,36 @@
 using static EventsProvider;
 
-public class MainMenuController : ScreenController
+namespace Gameplay.UI
 {
-    private readonly MainMenuView _menuView;
-
-    public MainMenuController(MainMenuView view, EventManager eventManager) : base(view, eventManager)
+    public class MainMenuController : ScreenController
     {
-        _menuView = view;
-    }
+        private readonly MainMenuView _menuView;
 
-    public override void Open()
-    {
-        base.Open();
+        public MainMenuController(MainMenuView view, EventManager eventManager) : base(view, eventManager)
+        {
+            _menuView = view;
+        }
 
-        foreach (var button in _menuView.LoadSceneButtons)
-            button.Clicked += HandleLoadSceneClicked;
-    }
+        public override void Open()
+        {
+            base.Open();
 
-    public override void Dispose()
-    {
-        foreach (var button in _menuView.LoadSceneButtons)
-            button.Clicked -= HandleLoadSceneClicked;
+            foreach (var button in _menuView.LoadSceneButtons)
+                button.Clicked += HandleLoadSceneClicked;
+        }
 
-        base.Dispose();
-    }
+        public override void Dispose()
+        {
+            foreach (var button in _menuView.LoadSceneButtons)
+                button.Clicked -= HandleLoadSceneClicked;
 
-    private void HandleLoadSceneClicked(LoadSceneButton button)
-    {
-        _eventManager.Publish(new StartLoadingEvent(
-            new SceneLoadingOperation(button.SceneName, button.LoadingDescription)));
+            base.Dispose();
+        }
+
+        private void HandleLoadSceneClicked(LoadSceneButton button)
+        {
+            _eventManager.Publish(new StartLoadingEvent(
+                new SceneLoadingOperation(button.SceneName, button.LoadingDescription)));
+        }
     }
 }

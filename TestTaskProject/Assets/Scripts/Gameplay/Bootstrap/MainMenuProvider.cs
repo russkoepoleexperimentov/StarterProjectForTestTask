@@ -1,21 +1,24 @@
+using static EventsProvider;
 using UnityEngine;
 using Zenject;
-using static EventsProvider;
 
-public class MainMenuProvider : MonoBehaviour
+namespace Gameplay.Bootstrap
 {
-    private const string MAIN_MENU_SCREEN_ID = "MainMenu";
-
-    private EventManager _eventManager;
-
-    [Inject]
-    private void Setup(EventManager eventManager)
+    public class MainMenuProvider : MonoBehaviour
     {
-        _eventManager = eventManager;
-    }
+        private const string MAIN_MENU_SCREEN_ID = "MainMenu";
 
-    private void Start()
-    {
-        _eventManager.Publish(new OpenScreenEvent(MAIN_MENU_SCREEN_ID));
+        private EventManager _eventManager;
+
+        [Inject]
+        private void Setup(EventManager eventManager)
+        {
+            _eventManager = eventManager;
+        }
+
+        private void Start()
+        {
+            _eventManager.Publish(new OpenScreenEvent(MAIN_MENU_SCREEN_ID));
+        }
     }
 }

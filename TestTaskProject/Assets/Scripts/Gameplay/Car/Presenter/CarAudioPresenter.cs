@@ -1,18 +1,17 @@
-﻿using Gameplay.Car.Configs;
-using Gameplay.Car.Model;
+﻿using Gameplay.Car.Model;
 using Gameplay.Car.View;
 using UnityEngine;
 using Zenject;
 
-namespace Gameplay.Car.Controller
+namespace Gameplay.Car.Presenter
 {
-    public class CarAudioController : ITickable
+    public class CarAudioPresenter : ITickable
     {
         private readonly CarStateModel _state;
         private readonly CarAudioModel _audioModel;
         private readonly CarAudioView _audioView;
 
-        public CarAudioController(CarStateModel state, CarAudioModel audioModel, CarAudioView audioView)
+        public CarAudioPresenter(CarStateModel state, CarAudioModel audioModel, CarAudioView audioView)
         {
             _state = state;
             _audioModel = audioModel;

@@ -11328,8 +11328,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
   _visual: {fileID: 1404575258}
-  _skidSlipThreshold: 0.4
-  _skidSlipReference: 1
 --- !u!1 &115697105
 GameObject:
   m_ObjectHideFlags: 0
@@ -11416,8 +11414,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
   _visual: {fileID: 1181227718}
-  _skidSlipThreshold: 0.4
-  _skidSlipReference: 1
 --- !u!1001 &115992503
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13960,8 +13956,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
   _visual: {fileID: 724868045}
-  _skidSlipThreshold: 0.4
-  _skidSlipReference: 1
 --- !u!1001 &146133498
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62553,7 +62547,7 @@ Transform:
   m_GameObject: {fileID: 617614349}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -38.833225, y: 6.47, z: -221.74617}
+  m_LocalPosition: {x: -38.75, y: 6.47, z: -221.74617}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -98500,8 +98494,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
   _visual: {fileID: 36777858}
-  _skidSlipThreshold: 0.4
-  _skidSlipReference: 1
 --- !u!1001 &942123282
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -115881,8 +115873,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
   _visual: {fileID: 91107424}
-  _skidSlipThreshold: 0.4
-  _skidSlipReference: 1
 --- !u!146 &1094504646
 WheelCollider:
   m_ObjectHideFlags: 0
@@ -129817,7 +129807,7 @@ Transform:
   m_GameObject: {fileID: 1222491549}
   serializedVersion: 2
   m_LocalRotation: {x: 0.06084441, y: -3.00631e-10, z: 8.6029045e-11, w: 0.99814725}
-  m_LocalPosition: {x: -38.833225, y: 7.973529, z: -226.51476}
+  m_LocalPosition: {x: -38.75, y: 7.973529, z: -226.51476}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -136256,8 +136246,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
   _visual: {fileID: 401325171}
-  _skidSlipThreshold: 0.4
-  _skidSlipReference: 1
 --- !u!1001 &1272093554
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -158068,8 +158056,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
   _visual: {fileID: 89115944}
-  _skidSlipThreshold: 0.4
-  _skidSlipReference: 1
 --- !u!1001 &1456546278
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -206880,7 +206866,7 @@ Transform:
   m_GameObject: {fileID: 1900770400}
   serializedVersion: 2
   m_LocalRotation: {x: 0.06084441, y: -2.9648858e-10, z: 1.8073156e-11, w: 0.99814725}
-  m_LocalPosition: {x: -38.833225, y: 7.973529, z: -226.51476}
+  m_LocalPosition: {x: -38.75, y: 7.973529, z: -226.51476}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -227938,8 +227924,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
   _visual: {fileID: 1551117223}
-  _skidSlipThreshold: 0.4
-  _skidSlipReference: 1
 --- !u!1001 &2066124163
 PrefabInstance:
   m_ObjectHideFlags: 0

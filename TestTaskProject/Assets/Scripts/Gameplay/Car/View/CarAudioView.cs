@@ -46,6 +46,7 @@ namespace Gameplay.Car.View
             source.loop = true;
             source.spatialBlend = 1f;
             source.volume = 0f;
+            source.dopplerLevel = 0f; // чтобы звук не шакалился при тряске камеры 
             source.Play();
                 
             return source;

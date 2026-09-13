@@ -2,7 +2,7 @@
 
 namespace Gameplay.Car.Configs
 {
-    [CreateAssetMenu(menuName = "Car/Car systems config")]
+    [CreateAssetMenu(menuName = "Car/CarSystemsConfig")]
     public class CarSystemsConfig : ScriptableObject
     {
         [field: SerializeField] public float MaxBrakeTorque { get; set; } = 3000;

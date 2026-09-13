@@ -16,5 +16,6 @@ namespace Gameplay.Car.Configs
         
         [field: SerializeField] public float MinPitch { get; set; } = 0.8f;
         [field: SerializeField] public float MaxPitch { get; set; } = 1.6f;
+        
     }
 }

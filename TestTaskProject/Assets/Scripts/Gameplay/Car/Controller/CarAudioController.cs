@@ -23,6 +23,7 @@ namespace Gameplay.Car.Controller
         {
             var parametersModel = _audioModel.CalculateEngineAudio(_state.RPM, _state.Throttle, Time.deltaTime);
             _audioView.ApplyEngineSound(parametersModel);
+            _audioView.ApplySkidmarksSound();
         }
     }
 }

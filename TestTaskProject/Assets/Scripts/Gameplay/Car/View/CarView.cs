@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Gameplay.Car.View;
 using UnityEngine;
 
@@ -24,6 +25,8 @@ public class CarView : MonoBehaviour
     [SerializeField] private Transform _centerOfMass;
 
     public float SpeedKph => Vector3.Dot(_rigidbody.linearVelocity, _rigidbody.transform.forward) * MPS_TO_KPH;
+    
+    public IReadOnlyCollection<Axle> Axles => _axles;
 
     public int NumDriveWheels
     {

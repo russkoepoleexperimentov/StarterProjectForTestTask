@@ -15,6 +15,7 @@ public class CarInstaller : MonoInstaller
     [SerializeField] private GearboxConfig _gearboxConfig;
     [SerializeField] private GearboxUsageConfig _gearboxUsageConfig;
     [SerializeField] private CarSystemsConfig _carSystemsConfig;
+    [SerializeField] private CarWheelEffectsConfig _wheelEffectsConfig;
     
     [SerializeField] private CarAudioConfig _audioConfig;
     
@@ -37,6 +38,7 @@ public class CarInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<CarAudioController>().AsSingle();
         Container.Bind<CarAudioModel>().AsSingle();
         Container.Bind<CarAudioView>().FromInstance(_carAudioView).AsSingle();
+        Container.Bind<CarWheelEffectsConfig>().FromInstance(_wheelEffectsConfig).AsSingle();
 
         Container.BindInterfacesAndSelfTo<CarController>().AsSingle();
 

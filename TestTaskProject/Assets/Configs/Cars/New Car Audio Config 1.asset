@@ -16,7 +16,7 @@ MonoBehaviour:
   <DecelerationHigh>k__BackingField: {fileID: 8300000, guid: fac3677d3bb947c4da0c137a02634c76, type: 3}
   <AccelerationLow>k__BackingField: {fileID: 8300000, guid: 2c35101eca6c5884b83272ec1f2fc1a2, type: 3}
   <DecelerationLow>k__BackingField: {fileID: 8300000, guid: 656f2000e7b0b0d479837e2fab72fe2e, type: 3}
-  <HighRpmReference>k__BackingField: 2500
+  <HighRpmReference>k__BackingField: 2000
   <LowRpmReference>k__BackingField: 1000
   <MinPitch>k__BackingField: 0.2
   <MaxPitch>k__BackingField: 1.6

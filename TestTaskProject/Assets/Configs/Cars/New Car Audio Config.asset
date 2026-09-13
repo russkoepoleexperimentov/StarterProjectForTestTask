@@ -20,3 +20,4 @@ MonoBehaviour:
   <LowRpmReference>k__BackingField: 1000
   <MinPitch>k__BackingField: 0.2
   <MaxPitch>k__BackingField: 1.6
+  <Skidmarks>k__BackingField: {fileID: 8300000, guid: 79feb14c29d7ef843860857e40e5a70f, type: 3}

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76389a7933a5407c89c48d88a298a08e, type: 3}
   m_Name: CarSystems
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.Configs.CarSystemsConfig
-  <MaxBrakeTorque>k__BackingField: 500
+  <MaxBrakeTorque>k__BackingField: 5000
   <MaxHandBrakeTorque>k__BackingField: 300
   <MaxSteerAngle>k__BackingField: 30

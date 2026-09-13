@@ -2,7 +2,7 @@
 
 namespace Gameplay.Car.Configs
 {
-    [CreateAssetMenu(menuName = "Car/Gearbox Usage Config")]
+    [CreateAssetMenu(menuName = "Car/GearboxUsageConfig")]
     public class GearboxUsageConfig : ScriptableObject
     {
         [field: SerializeField] public float ShiftTimeSeconds { get; private set; } = 0.3f;

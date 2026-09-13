@@ -46,6 +46,8 @@ namespace Gameplay.Car.Model
                 lowPitch, highPitch);
 
         }
+        
+        
 
         private float Magic(float x) => 1 - ((1 - x) * (1 - x));
     }

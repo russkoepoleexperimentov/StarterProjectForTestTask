@@ -22,5 +22,15 @@ namespace Gameplay.Car.View
             _wheelCollider.GetWorldPose(out var position, out var rotation);
             _visual.SetPositionAndRotation(position, rotation);
         }
+
+        public float GetSlip()
+        {
+            var isGrounded = _wheelCollider.GetGroundHit(out var hit);
+            
+            if(!isGrounded)
+                return 0f;
+
+            return Mathf.Max(Mathf.Abs(hit.forwardSlip), Mathf.Abs(hit.sidewaysSlip));
+        }
     }
 }

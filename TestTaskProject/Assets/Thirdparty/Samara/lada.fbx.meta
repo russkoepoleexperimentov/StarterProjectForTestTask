@@ -1,0 +1,365 @@
+fileFormatVersion: 2
+guid: 754fef0539c49d241bc2ea5061d61204
+ModelImporter:
+  serializedVersion: 24200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: '#######.0'
+    second: {fileID: 2100000, guid: 3248ff41de869c74ab689a7c73dca708, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: '#######.1'
+    second: {fileID: 2100000, guid: 756e8e33e677cd542b374badb8074ed8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: '######.1'
+    second: {fileID: 2100000, guid: 98931359f63fcc44fab0ba7e411e1848, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: '######.2'
+    second: {fileID: 2100000, guid: f81f2a0bc2c9c524ebb315aa15b3d4dd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Object001.4
+    second: {fileID: 2100000, guid: 4ad0440723230fb408b5c6fa465d6ce5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: body.0
+    second: {fileID: 2100000, guid: 08df2d33b2dcb7d4f90144ad52cfe78d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bonnet_ok.1
+    second: {fileID: 2100000, guid: 41e930519d5f98e47976593847b22695, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bonnet_ok.2
+    second: {fileID: 2100000, guid: e4dbeaecf46093f4c8b6f4ac2f15b074, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: boot.1
+    second: {fileID: 2100000, guid: 88942ac10d2b5744f846369f91357b54, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: boot_ok.2
+    second: {fileID: 2100000, guid: 26ceaf4dbafe62445825cf87df81bd21, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: boot_ok.3
+    second: {fileID: 2100000, guid: d3df1981329ed50438a83d8d31dfe32e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: breaklight l
+    second: {fileID: 2100000, guid: 9d60d19297ef29d469237484de72f9ab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: breaklight r
+    second: {fileID: 2100000, guid: fba4a803c7927bd4a9fa4ad0f0e04ea3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: breaklight r.001
+    second: {fileID: 2100000, guid: c0ef7e4da0778f0448e6c6b0ddcfc573, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bump_rear_ok.1
+    second: {fileID: 2100000, guid: 8650a9f2dd04c2a47820abebce6fe33b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bump_rear_ok.2
+    second: {fileID: 2100000, guid: dbe0bdaf187e5f34fbe60e70b4a958b6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bump_rear_ok.3
+    second: {fileID: 2100000, guid: 3855365a9ebd183418168ad2b0f459cd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: chassis.0
+    second: {fileID: 2100000, guid: 3fcea9226a5b50d46beb7e4b15bbe3f8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: chassis.002
+    second: {fileID: 2100000, guid: 862e24b8fb6c0ba47aa5034cb62f047a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: chassis.003
+    second: {fileID: 2100000, guid: de778b3798159154fb31847fbd87fd34, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: chassis.1
+    second: {fileID: 2100000, guid: b87182be02c78d545a5b5b5357109aa8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: chassis.2
+    second: {fileID: 2100000, guid: 81fcf275f2673b244bb620e67e268d3b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_lr_ok.4
+    second: {fileID: 2100000, guid: 80059021a79d0b640a221c5482f772ee, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_rf_ok.5
+    second: {fileID: 2100000, guid: 75250ff2b5b6b044aac65e58dd232c4e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door_rf_ok.7
+    second: {fileID: 2100000, guid: 8a87de8df1d092f45a71ea43302d9bf9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: fars_front.1
+    second: {fileID: 2100000, guid: 48fb644b9cfcb6c4bb356c1729d9517d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: glass
+    second: {fileID: 2100000, guid: bd0b662c3a9e181438ebea7875be5fb2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gluch.0
+    second: {fileID: 2100000, guid: 5adce9c23132c0f4a91c3071d8e7d42f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: indicator lf
+    second: {fileID: 2100000, guid: 0fbf10d0645775349824d3b3cc1fb995, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: indicator lm
+    second: {fileID: 2100000, guid: 3037e7b8fba460b4394e5e9119b142f8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: indicator lr
+    second: {fileID: 2100000, guid: bd2844385b4b0794cad89bdc15976bda, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: indicator rf
+    second: {fileID: 2100000, guid: 800324a8444992e4f85e1c63251995c4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: indicator rm
+    second: {fileID: 2100000, guid: 08603a2c46c1fe1449525ab05388f53a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: indicator rr
+    second: {fileID: 2100000, guid: 40592c3075563af4c95644c760496da8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: left front light
+    second: {fileID: 2100000, guid: bf8d8c644dd31644295e644a27fabaa0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: left front light.001
+    second: {fileID: 2100000, guid: fa9e0ef635c1c934db3b27a0ca50f272, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: left rear light
+    second: {fileID: 2100000, guid: be3787cbce3863b4d9cabea47b5467ad, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: revlight L
+    second: {fileID: 2100000, guid: f52ce86335aefa34a93e2e558690027f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: revlight r
+    second: {fileID: 2100000, guid: 27cc3c6bf92f52d46a3d33113a85a164, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: right front light
+    second: {fileID: 2100000, guid: 654cb3e48371595429d3b61adefdc0a9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: right front light.001
+    second: {fileID: 2100000, guid: d5dc74a1788f0f948971b8254330aa68, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: right rear light
+    second: {fileID: 2100000, guid: 748ff8d1f87af504bac2c568c1bfb166, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: salon.1
+    second: {fileID: 2100000, guid: ffbe37fb7313bd241a660c94f08936b8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: salon.2
+    second: {fileID: 2100000, guid: 9ce0345bd0df59a4b9e6b3b178ba0065, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: seats_l.0
+    second: {fileID: 2100000, guid: a5f81ad3a6658a6419f784fc452e644f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: seats_l.1
+    second: {fileID: 2100000, guid: fe45690ccc7422a498fabfcf32cd8b49, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: sedeniya.2
+    second: {fileID: 2100000, guid: ac561ebe22a5643469b6a2637575dc06, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: sedeniya.3
+    second: {fileID: 2100000, guid: 674ee6539ea458447b10b865e587cb2d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wheel.0
+    second: {fileID: 2100000, guid: 5f1258408fce402408676af175d155e8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wheel.1
+    second: {fileID: 2100000, guid: f5d27a3e855ef8b44ae1cacfc3ac29c0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: windshield.0
+    second: {fileID: 2100000, guid: 4748269f3477b2345a0a7ba3f3250ed2, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -73,16 +73,23 @@ namespace Gameplay.Car.View
 
         public void ApplyDrive(DrivetrainOutputModel drivetrainOutput) 
         {
-            float fraction = 1f / NumDriveWheels;
+            float fraction = 1f / Mathf.Max(NumDriveWheels, 1);
 
             foreach (Axle axle in _axles)
             {
+                // педаль и ручник не складываются - берём тот, что тормозит сильнее
+                var brakeTorque = Mathf.Max(axle.BrakeFactor * drivetrainOutput.BrakeTorque,
+                    axle.HandBrakeFactor * drivetrainOutput.HandBrakeTorque);
+
                 if (axle.IsDrivable)
                 {
                     ApplyForBothWheels(axle, w => w.Collider.motorTorque = drivetrainOutput.MotorTorque * fraction);
+
+                    // торможение двигателем доезжает только до ведущих колёс
+                    brakeTorque += drivetrainOutput.EngineBrakeTorque * fraction;
                 }
 
-                ApplyForBothWheels(axle, w => w.Collider.brakeTorque = axle.BrakeFactor * drivetrainOutput.BrakeTorque);
+                ApplyForBothWheels(axle, w => w.Collider.brakeTorque = brakeTorque);
                 ApplyForBothWheels(axle, w => w.Collider.steerAngle = axle.SteerFactor * drivetrainOutput.SteerAngle);
 
                 ApplyForBothWheels(axle, w => w.ApplyVisual());

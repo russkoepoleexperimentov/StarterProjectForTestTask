@@ -22,3 +22,4 @@ MonoBehaviour:
   <InertiaKgM>k__BackingField: 0.3
   <BaseFriction>k__BackingField: 25
   <RPMFriction>k__BackingField: 0.02
+  <EngineBrakeFadeRPM>k__BackingField: 400

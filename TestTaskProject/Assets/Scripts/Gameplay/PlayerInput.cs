@@ -100,13 +100,31 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Handbrake"",
+                    ""type"": ""Button"",
+                    ""id"": ""c1dc1091-e8bd-40fc-8cfe-3ae47e82391c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Clutch"",
+                    ""type"": ""Button"",
+                    ""id"": ""c7181ead-83e5-4c9a-bf85-8a82932413fc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": ""2D Vector"",
                     ""id"": ""07f3839f-4d73-4d20-9cd0-132cbfc77a2d"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -157,6 +175,28 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b657b4b3-b64a-4912-8fba-5561e38a335e"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Handbrake"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5eb0d45d-36d5-460b-a33b-a085e9c82cd6"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Clutch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -166,6 +206,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         // Game
         m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
         m_Game_Movement = m_Game.FindAction("Movement", throwIfNotFound: true);
+        m_Game_Handbrake = m_Game.FindAction("Handbrake", throwIfNotFound: true);
+        m_Game_Clutch = m_Game.FindAction("Clutch", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -247,6 +289,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Game;
     private List<IGameActions> m_GameActionsCallbackInterfaces = new List<IGameActions>();
     private readonly InputAction m_Game_Movement;
+    private readonly InputAction m_Game_Handbrake;
+    private readonly InputAction m_Game_Clutch;
     /// <summary>
     /// Provides access to input actions defined in input action map "Game".
     /// </summary>
@@ -262,6 +306,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Game/Movement".
         /// </summary>
         public InputAction @Movement => m_Wrapper.m_Game_Movement;
+        /// <summary>
+        /// Provides access to the underlying input action "Game/Handbrake".
+        /// </summary>
+        public InputAction @Handbrake => m_Wrapper.m_Game_Handbrake;
+        /// <summary>
+        /// Provides access to the underlying input action "Game/Clutch".
+        /// </summary>
+        public InputAction @Clutch => m_Wrapper.m_Game_Clutch;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -291,6 +343,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
+            @Handbrake.started += instance.OnHandbrake;
+            @Handbrake.performed += instance.OnHandbrake;
+            @Handbrake.canceled += instance.OnHandbrake;
+            @Clutch.started += instance.OnClutch;
+            @Clutch.performed += instance.OnClutch;
+            @Clutch.canceled += instance.OnClutch;
         }
 
         /// <summary>
@@ -305,6 +363,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
+            @Handbrake.started -= instance.OnHandbrake;
+            @Handbrake.performed -= instance.OnHandbrake;
+            @Handbrake.canceled -= instance.OnHandbrake;
+            @Clutch.started -= instance.OnClutch;
+            @Clutch.performed -= instance.OnClutch;
+            @Clutch.canceled -= instance.OnClutch;
         }
 
         /// <summary>
@@ -352,5 +416,19 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMovement(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Handbrake" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHandbrake(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Clutch" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnClutch(InputAction.CallbackContext context);
     }
 }

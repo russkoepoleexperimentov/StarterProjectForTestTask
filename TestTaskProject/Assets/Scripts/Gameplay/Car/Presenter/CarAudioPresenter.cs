@@ -23,6 +23,9 @@ namespace Gameplay.Car.Presenter
             var parametersModel = _audioModel.CalculateEngineAudio(_state.RPM, _state.Throttle, Time.deltaTime);
             _audioView.ApplyEngineSound(parametersModel);
             _audioView.ApplySkidmarksSound();
+
+            if (_audioModel.ConsumeHandbrakePull(_state.Handbrake))
+                _audioView.PlayHandbrakePull();
         }
     }
 }

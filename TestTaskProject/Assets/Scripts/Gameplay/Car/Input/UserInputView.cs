@@ -1,7 +1,7 @@
 using Gameplay.Car.Model;
 using UnityEngine;
 
-namespace Gameplay.Car.View
+namespace Gameplay.Car.Input
 {
     public class UserInputView : MonoBehaviour, IInputSource {
         private PlayerInput _input;
@@ -17,14 +17,16 @@ namespace Gameplay.Car.View
 
         public DrivetrainInputModel Read() {
             if (_input == null)
-                return new(0f, 0f, 0f);
+                return new(0f, 0f, 0f, 0f, 0f);
 
             var input = _input.Game.Movement.ReadValue<Vector2>();
             var throttle = Mathf.Clamp01(input.y);
             var brake = Mathf.Clamp01(-input.y);
             var steering = input.x;
+            var handbrake = Mathf.Clamp01(_input.Game.Handbrake.ReadValue<float>());
+            var clutch = 1f - Mathf.Clamp01(_input.Game.Clutch.ReadValue<float>());
 
-            return new(throttle, brake, steering);
+            return new(throttle, brake, steering, clutch, handbrake);
         }
     }
 }

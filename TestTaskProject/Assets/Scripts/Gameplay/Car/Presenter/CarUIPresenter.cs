@@ -65,6 +65,7 @@ namespace Gameplay.Car.Presenter
             _view.SetGear(FormatGear(state.GearIndex));
             _view.SetSpeed(Mathf.RoundToInt(Mathf.Abs(state.SpeedKph)));
             _view.SetRpm(Mathf.RoundToInt(state.RPM));
+            _view.SetInput(state.Throttle, state.Brake, state.Steering, state.ClutchEngagement);
         }
 
         private static string FormatGear(int gearIndex)

@@ -17,3 +17,5 @@ MonoBehaviour:
   <SkidmarksMaxPitch>k__BackingField: 2
   <SkidmarksMinSlip>k__BackingField: 0.45
   <SkidmarksStepPerMeterSlip>k__BackingField: 1
+  <HandbrakeClip>k__BackingField: {fileID: 8300000, guid: 27dcfbbc44eea5345ad32c416d75b8fa, type: 3}
+  <HandbrakePullThreshold>k__BackingField: 0.5

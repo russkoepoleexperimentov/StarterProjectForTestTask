@@ -1,4 +1,5 @@
 using Gameplay.Car.Configs;
+using Gameplay.Car.Input;
 using Gameplay.Car.Model;
 using Gameplay.Car.Presenter;
 using Gameplay.Car.Services;
@@ -34,7 +35,13 @@ namespace Gameplay.Car
 
             Container.Bind<IInputSource>().FromInstance(_input).AsSingle();
 
+            Container.Bind<EngineTorqueCurve>().AsSingle();
+            Container.Bind<GearboxModel>().AsSingle();
             Container.Bind<DrivetrainModel>().AsSingle();
+
+            Container.Bind<CarInputFilter>().AsSingle();
+            Container.Bind<AutoGearboxAssist>().AsSingle();
+            Container.Bind<CarInputProcessor>().AsSingle();
             Container.Bind<CarStateModel>().AsSingle();
 
             Container.Bind<CarAudioConfig>().FromInstance(_audioConfig).AsSingle();

@@ -18,6 +18,7 @@ namespace Gameplay.Car.View
         private AudioSource _decelHighSource;
 
         private AudioSource _skidSource;
+        private AudioSource _oneShotSource;
 
         private CarView _view;
         
@@ -33,6 +34,7 @@ namespace Gameplay.Car.View
             _decelHighSource = CreateAudioSource(_audioConfig.DecelerationHigh);
 
             _skidSource = CreateAudioSource(_wheelEffectsConfig.SkidmarksClip);
+            _oneShotSource = CreateOneShotAudioSource();
 
             _view = view;
         }
@@ -58,6 +60,28 @@ namespace Gameplay.Car.View
             
             _skidSource.pitch = Mathf.Clamp(pitch, _wheelEffectsConfig.SkidmarksMinPitch, _wheelEffectsConfig.SkidmarksMaxPitch);
             _skidSource.volume = Mathf.Clamp01(pitch);
+        }
+
+        public void PlayHandbrakePull()
+        {
+            var clip = _wheelEffectsConfig.HandbrakeClip;
+
+            if (clip == null) return;
+
+            _oneShotSource.PlayOneShot(clip);
+        }
+
+        private AudioSource CreateOneShotAudioSource()
+        {
+            var source = gameObject.AddComponent<AudioSource>();
+
+            source.playOnAwake = false;
+            source.loop = false;
+            source.spatialBlend = 1f;
+            source.volume = 1f;
+            source.dopplerLevel = 0f;
+
+            return source;
         }
 
         private AudioSource CreateAudioSource(AudioClip clip)

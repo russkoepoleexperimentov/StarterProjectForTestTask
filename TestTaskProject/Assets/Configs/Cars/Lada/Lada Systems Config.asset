@@ -13,5 +13,13 @@ MonoBehaviour:
   m_Name: Lada Systems Config
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.Configs.CarSystemsConfig
   <MaxBrakeTorque>k__BackingField: 500
-  <MaxHandBrakeTorque>k__BackingField: 300
+  <MaxHandBrakeTorque>k__BackingField: 1000
   <MaxSteerAngle>k__BackingField: 30
+  <SteerSpeedFalloffKph>k__BackingField: 60
+  <MinSteerFactor>k__BackingField: 0.3
+  <SteerAttackRate>k__BackingField: 3
+  <SteerReleaseRate>k__BackingField: 6
+  <BrakeRiseRate>k__BackingField: 4
+  <BrakeFallRate>k__BackingField: 6
+  <PassiveBrakeAmount>k__BackingField: 0.2
+  <PedalThreshold>k__BackingField: 0.2

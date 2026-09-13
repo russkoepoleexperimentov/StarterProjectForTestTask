@@ -10,5 +10,10 @@ namespace Gameplay.Car.Configs
         [field: SerializeField] public float SkidmarksMaxPitch { get; set; } = 2f;
         [field: SerializeField] public float SkidmarksMinSlip { get; set; } = 0.4f;
         [field: SerializeField] public float SkidmarksStepPerMeterSlip { get; set; } = 1f;
+
+        [Header("Handbrake")]
+        // одноразовый звук затяжки рычага
+        [field: SerializeField] public AudioClip HandbrakeClip { get; set; }
+        [field: SerializeField] public float HandbrakePullThreshold { get; set; } = 0.5f;
     }
 }

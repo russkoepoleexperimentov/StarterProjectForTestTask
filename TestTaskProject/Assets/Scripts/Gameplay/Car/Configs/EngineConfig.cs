@@ -13,7 +13,7 @@ public class EngineConfig : ScriptableObject
     [field: SerializeField] public float IdleTorqueFraction { get; private set; } = 0.35f;
     
     [field: SerializeField] public float InertiaKgM { get; private set; } = 0.3f;
-
     [field: SerializeField] public float BaseFriction { get; private set; } = 25;
     [field: SerializeField] public float RPMFriction { get; private set; } = 0.02f;
+    [field: SerializeField] public float EngineBrakeFadeRPM { get; private set; } = 400f;
 }

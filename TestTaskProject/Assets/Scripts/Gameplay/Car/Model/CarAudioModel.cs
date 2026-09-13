@@ -7,15 +7,29 @@ namespace Gameplay.Car.Model
     {
         private readonly CarAudioConfig _audioConfig;
         private readonly EngineConfig _engineConfig;
+        private readonly CarWheelEffectsConfig _wheelEffectsConfig;
 
         private float _throttle;
+        private bool _handbrakePulled;
         
         private const float THROTTLE_SMOOTH_TIME = 0.7f;
 
-        public CarAudioModel(CarAudioConfig audioConfig, EngineConfig engineConfig)
+        public CarAudioModel(CarAudioConfig audioConfig, EngineConfig engineConfig,
+            CarWheelEffectsConfig wheelEffectsConfig)
         {
             _audioConfig = audioConfig;
             _engineConfig = engineConfig;
+            _wheelEffectsConfig = wheelEffectsConfig;
+        }
+
+        public bool ConsumeHandbrakePull(float handbrake)
+        {
+            var pulled = handbrake >= _wheelEffectsConfig.HandbrakePullThreshold;
+            var isPull = pulled && !_handbrakePulled;
+
+            _handbrakePulled = pulled;
+
+            return isPull;
         }
         
         public EngineAudioParametersModel CalculateEngineAudio(float engineRpm, float throttle, float deltaTime)

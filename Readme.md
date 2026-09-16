@@ -60,19 +60,20 @@ UI представляет собой экран, который открыва
 
 ## Документация + информационные ресурсы
 - https://learn.microsoft.com/ru-ru/dotnet/api/system.threading.tasks.taskcompletionsource-1?view=net-10.0
-- https://www.youtube.com/watch?v=NuVrpZeDUIc&pp=ygUp0LzQsNC60YHQuNC8INC60YDRjtC60L7QsiB0b3dlciBkZWZlbmNlIDg%3D
-- https://github.com/EthanReid/unity-scripts/
+- https://www.youtube.com/watch?v=NuVrpZeDUIc&pp=ygUp0LzQsNC60YHQuNC8INC60YDRjtC60L7QsiB0b3dlciBkZWZlbmNlIDg%3D - источник вдохновения перехода между сценами
+- https://github.com/EthanReid/unity-scripts/ - референс кода для трансмиссии 
+- https://www.youtube.com/watch?v=kmL7DnxeUTE - референс кастомного WheelCollider
+- https://www.youtube.com/watch?v=2d_kAyWs1_A - референс интегратора показателей скольжения для кастомного WheelCollider
+- https://gamedev.net/forums/topic/694941-clutch-modelling-help/ - (в самом низу) референс кода для сцепления
+
 
 ## Third-party assets
-- https://assetstore.unity.com/packages/3d/environments/urban/demo-city-by-versatile-studio-mobile-friendly-269772
-- https://assetstore.unity.com/packages/3d/vehicles/land/3d-low-poly-car-for-games-tocus-101652
-- Unity Standard Assets 5.x - звуки
-- https://stmods.org/spintires/mods/vaz_2115_pyatnashka_by_vladlen_phoenix_for_spintires/ - звуки
-- https://libertycity.ru/files/gta-san-andreas/166669-vaz-2114-dag-edit-ivf.html - модель с текстурами
+- https://assetstore.unity.com/packages/3d/environments/urban/demo-city-by-versatile-studio-mobile-friendly-269772 - окружение
+- https://assetstore.unity.com/packages/3d/vehicles/land/3d-low-poly-car-for-games-tocus-101652 - модель машины
+- Unity Standard Assets 5.x - звук скольжения шин
+- https://libertycity.ru/files/gta-san-andreas/166669-vaz-2114-dag-edit-ivf.html - модель машины 2
 - https://github.com/Engine-Simulator/engine-sim-community-edition - симулятор двигателя (для генерации звуков)
 - https://catalog.engine-sim.parts/parts/2609 - профиль нужного двигателя
-- https://www.youtube.com/watch?v=kmL7DnxeUTE
-- https://www.youtube.com/watch?v=2d_kAyWs1_A
 
 # Известные проблемы
 - При старте колёса испускают звук пробуксовки - баг WheelCollider (скорее всего - не хватает суб-шагов симуляции)

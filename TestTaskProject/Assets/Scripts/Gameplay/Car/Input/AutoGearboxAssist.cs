@@ -96,14 +96,14 @@ namespace Gameplay.Car.Input
                 target = Mathf.Lerp(_gearboxUsageConfig.MinClutchEngagement, 1f, speedFactor);
             }
 
-            target = Mathf.Min(target, clutchInput);
+            target = Mathf.Min(target, 1 - clutchInput);
 
             _clutchTimeRamp = Mathf.MoveTowards(_clutchTimeRamp, 1f, engageSpeed);
 
             // сцепление схватывается не быстрее, чем позволяют и таймер, и набранная скорость
             _clutchEngagement = Mathf.Min(_clutchTimeRamp, target);
 
-            return _clutchEngagement;
+            return 1f - _clutchEngagement; // педаль - инвертированное значение
         }
     }
 }

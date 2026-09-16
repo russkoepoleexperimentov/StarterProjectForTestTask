@@ -39,13 +39,13 @@ namespace Gameplay.Car.Input
             var torque = isShifting ? 0f : _torqueCurve.Evaluate(engineRpm) * throttle;
 
             // коробке отдаём сырые намерения игрока
-            _autoGearbox.UpdateGear(raw.Throttle, raw.Brake, speedKph, torque, engineRpm, deltaTime);
+            _autoGearbox.UpdateGear(raw.ThrottlePedal, raw.BrakePedal, speedKph, torque, engineRpm, deltaTime);
 
             // а вот пассивное торможение считаем уже на новой передаче
             var brake = _filter.ApplyPassiveBraking(brakePedal, throttle, _gearbox.CurrentGear);
 
             var handbrake = raw.Handbrake;
-            var clutch = _autoGearbox.UpdateClutch(speedKph, isShifting, throttle, raw.ClutchEngagement, deltaTime);
+            var clutch = _autoGearbox.UpdateClutch(speedKph, isShifting, throttle, raw.ClutchPedal, deltaTime);
             var steering = _filter.FilterSteering(raw.Steering, handbrake > 0, speedKph, deltaTime);
 
             return new DrivetrainInputModel(throttle, brake, steering, handbrake, clutch, isShifting);

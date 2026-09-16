@@ -36,6 +36,8 @@ namespace Gameplay.Car.View
         private float _latSlip;
         private float _slipVelocity;
 
+        private float _feedbackImpulse;
+
         
         private Rigidbody _carRigidBody;
         private float _wheelAngularVelocity = 0f;
@@ -45,6 +47,8 @@ namespace Gameplay.Car.View
         public float MotorTorque { get; set; } = 0;
         public float BrakeTorque { get; set; } = 0;
         public float RPM => _wheelAngularVelocity * 30 / Mathf.PI;
+        public float FeedbackImpulse => _feedbackImpulse;
+        public float Inertia => 0.5f * Mass * Radius * Radius;
 
         // slip integration constants
         private const float RELAX_LNG = .01f; 
@@ -64,6 +68,11 @@ namespace Gameplay.Car.View
             {
                 _visual = transform.GetChild(0);
             }
+        }
+
+        public void AddAcceleration(float angularAcceleration)
+        {
+            _wheelAngularVelocity += angularAcceleration;
         }
 
         public void ApplyVisual() {  }
@@ -111,13 +120,11 @@ namespace Gameplay.Car.View
                 : Vector3.zero;
             var contactLatVelocity = wheelDidHit ? Vector3.Dot(contactVelocity, contactRight) : 0f;
             var contactLngVelocity = wheelDidHit ? Vector3.Dot(contactVelocity, contactForward) : 0f;
-
-            var wheelInertia = 0.5f * Mass * Radius * Radius;
             
             var tireMaxForce = localForce.y;
             
             
-            var tWheel = (_wheelAngularVelocity - contactLngVelocity / Radius) * wheelInertia / Time.fixedDeltaTime;
+            var tWheel = (_wheelAngularVelocity - contactLngVelocity / Radius) * Inertia / Time.fixedDeltaTime;
             tWheel = Mathf.Clamp(tWheel, -tireMaxForce, tireMaxForce);
 
             var wheelLinearVelocity = _wheelAngularVelocity * Radius;
@@ -149,15 +156,15 @@ namespace Gameplay.Car.View
             var latSlipCoeff  = Mathf.Clamp01(Mathf.Abs(contactLatVelocity) / RELAX_LAT * Time.fixedDeltaTime);
             _latSlip += (desiredLatSlip - _latSlip) * latSlipCoeff;
 
-            var angularAcceleration = -tWheel / wheelInertia;
+            var angularAcceleration = -tWheel / Inertia;
             _wheelAngularVelocity += angularAcceleration * Time.fixedDeltaTime;
 
             var rollingResistanceCoeff = 0.0005f; // asphalt
             var tResistance = _wheelAngularVelocity * (localForce.y - Physics.gravity.y) * rollingResistanceCoeff * -1f;
-            angularAcceleration = (MotorTorque + tResistance) / wheelInertia;
+            angularAcceleration = (MotorTorque + tResistance) / Inertia;
             _wheelAngularVelocity += angularAcceleration * Time.fixedDeltaTime;
             
-            angularAcceleration = BrakeTorque / wheelInertia;
+            angularAcceleration = BrakeTorque / Inertia;
             _wheelAngularVelocity +=
                 Mathf.Min(
                     Mathf.Abs(_wheelAngularVelocity),
@@ -186,6 +193,14 @@ namespace Gameplay.Car.View
                 _visual.position = transform.position - springDir * springLength;
                 _visual.localRotation = Quaternion.Euler(_rollRadians * Mathf.Rad2Deg, SteerAngle, 0);
             }
+            
+            // impulse calculations 
+            var totalFrictionTorque = tResistance + BrakeTorque;
+            var totalFrictionTorqueImpulse = totalFrictionTorque * Time.fixedDeltaTime;
+            var roadTorqueImpulse = localForce.z * Radius * Time.fixedDeltaTime;
+            var clampedSelfImpulse = Mathf.Clamp(_wheelAngularVelocity * Inertia, -totalFrictionTorqueImpulse, totalFrictionTorqueImpulse);
+            _feedbackImpulse = - (clampedSelfImpulse + roadTorqueImpulse);
+            
             
             _lastSpringLength = springLength;
         }

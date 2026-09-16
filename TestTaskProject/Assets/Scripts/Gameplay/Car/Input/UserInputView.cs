@@ -24,7 +24,7 @@ namespace Gameplay.Car.Input
             var brake = Mathf.Clamp01(-input.y);
             var steering = input.x;
             var handbrake = Mathf.Clamp01(_input.Game.Handbrake.ReadValue<float>());
-            var clutch = 1f - Mathf.Clamp01(_input.Game.Clutch.ReadValue<float>());
+            var clutch = Mathf.Clamp01(_input.Game.Clutch.ReadValue<float>());
 
             return new(throttle, brake, steering, clutch, handbrake);
         }

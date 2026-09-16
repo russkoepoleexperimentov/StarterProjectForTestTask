@@ -15,10 +15,12 @@ namespace Gameplay.Car.Model
         private readonly EngineTorqueCurve _torqueCurve;
         private readonly CarStateModel _stateModel;
 
-        private float _engineRpm;
+        private float _engineAngularVelocity;
+        private float _differentialVelocity;
         private float _velocity;
 
-        private const float RPM_ADJUST_SMOOTHNESS = 3;
+        private const float RPM2AngVel = Mathf.PI / 30;
+        private const float AngVel2RPM = 1f / RPM2AngVel;
 
         public DrivetrainModel(
             EngineConfig engineConfig,
@@ -36,59 +38,102 @@ namespace Gameplay.Car.Model
             _torqueCurve = torqueCurve;
             _stateModel = stateModel;
 
-            _engineRpm = _engineConfig.IdleRPM;
+            _engineAngularVelocity = _engineConfig.IdleRPM * RPM2AngVel;
         }
 
-        public DrivetrainOutputModel Tick(DrivetrainInputModel input, float averageWheelsRpm, float speedKph, float deltaTime)
+        public DrivetrainOutputModel Tick(DrivetrainInputModel input, float averageWheelsRpm, float feedbackImpulse, float driveInertia, float speedKph, float deltaTime)
         {
-            var producedTorque = CalculateEngine(input, averageWheelsRpm, deltaTime, out var engineBrakeTorque);
+            var acceleration = CalculateEngine(input, averageWheelsRpm, feedbackImpulse, driveInertia, deltaTime);
 
-            var brakeTorque = input.Brake * _carSystemsConfig.MaxBrakeTorque;
+            var brakeTorque = input.BrakePedal * _carSystemsConfig.MaxBrakeTorque;
             var handBrakeTorque = input.Handbrake * _carSystemsConfig.MaxHandBrakeTorque;
             var steerAngle = input.Steering * _carSystemsConfig.MaxSteerAngle;
 
-            _stateModel.Set(_engineRpm, speedKph, _gearbox.CurrentGear,
-                input.Throttle, input.Brake, input.Steering, input.Handbrake, input.ClutchEngagement);
+            _stateModel.Set(_engineAngularVelocity * AngVel2RPM, speedKph, _gearbox.CurrentGear,
+                input.ThrottlePedal, input.BrakePedal, input.Steering, input.Handbrake, input.ClutchPedal);
 
-            return new DrivetrainOutputModel(producedTorque, brakeTorque, handBrakeTorque, engineBrakeTorque, steerAngle);
+            return new DrivetrainOutputModel(acceleration, brakeTorque, handBrakeTorque, steerAngle);
         }
 
-        private float CalculateEngine(DrivetrainInputModel input, float averageWheelsRpm, float deltaTime,
-            out float engineBrakeTorque)
+        private float CalculateEngine(DrivetrainInputModel input, float averageWheelsRpm, float feedbackImpulse, float driveInertia, 
+            float deltaTime)
         {
-            var throttle = input.ThrottleCut ? 0f : input.Throttle;
+            var throttle = input.ThrottleCut ? 0f : input.ThrottlePedal;
 
-            var grossTorque = _torqueCurve.Evaluate(_engineRpm) * throttle;
-            var frictionTorque = _torqueCurve.EvaluateFriction(_engineRpm, throttle);
-
-            var engineTorque = grossTorque - frictionTorque;
-
-            var freeRpm = _engineRpm + engineTorque * deltaTime / _engineConfig.InertiaKgM;
+            var engineRpm = _engineAngularVelocity * AngVel2RPM;
+            var grossTorque = _torqueCurve.Evaluate(engineRpm) * throttle;
+            var frictionTorque = _torqueCurve.EvaluateFriction(engineRpm, throttle);
+            var netTorque = grossTorque - frictionTorque;
+            var netTorqueImpulse = netTorque * deltaTime;
 
             var ratio = _gearbox.CurrentRatio;
-            var clutch = input.ClutchEngagement;
+            var clutchEngagement = Mathf.Clamp01(1f - input.ClutchPedal);
+            var clutchDragImpulse = 0f;
+            
 
-            var drivingTorque = Mathf.Max(engineTorque, 0f);
-            var brakingTorque = Mathf.Max(-engineTorque, 0f) * _torqueCurve.EvaluateEngineBrakeFade(_engineRpm);
-
-            engineBrakeTorque = brakingTorque * Mathf.Abs(ratio) * clutch;
-
-            var newRpm = _gearbox.CurrentGear == 0 ? freeRpm : Mathf.Lerp(freeRpm, averageWheelsRpm * ratio, clutch);
-
-            var producedTorque = drivingTorque * ratio * clutch;
-
-            if (clutch < 1f)
+            if (!Mathf.Approximately(clutchEngagement, 0) && ratio != 0 && !Mathf.Approximately(feedbackImpulse, 0))
             {
-                var limit = _gearboxUsageConfig.MaxLaunchTorqueNm * clutch;
-                producedTorque = Mathf.Clamp(producedTorque, -limit, limit);
+                var clutchSpeed = _differentialVelocity * ratio;
+                clutchDragImpulse = GetClutchDragImpulse(_engineAngularVelocity, clutchSpeed, _engineConfig.InertiaKgM, driveInertia, ratio, netTorqueImpulse, feedbackImpulse, clutchEngagement, 500, deltaTime);
             }
+            
+            if(float.IsNaN(clutchDragImpulse)) clutchDragImpulse = 0;
 
-            _engineRpm = Mathf.SmoothDamp(_engineRpm, newRpm, ref _velocity,
-                deltaTime * RPM_ADJUST_SMOOTHNESS);
+            var impulseToEngine = netTorqueImpulse + clutchDragImpulse;
+            var impulseToDifferential = feedbackImpulse - clutchDragImpulse * ratio;
+            
+            _engineAngularVelocity += impulseToEngine / _engineConfig.InertiaKgM;
+            _differentialVelocity += impulseToDifferential / driveInertia;
 
-            _engineRpm = Mathf.Clamp(_engineRpm, _engineConfig.IdleRPM, _engineConfig.RedlineRPM);
+            if (float.IsNaN(_differentialVelocity)) _differentialVelocity = 0f;
+            
+            var differentialRealVelocity = averageWheelsRpm * RPM2AngVel;
+            var correctionAcceleration = _differentialVelocity - differentialRealVelocity;
 
-            return producedTorque;
+            _engineAngularVelocity = Mathf.Clamp(_engineAngularVelocity, _engineConfig.IdleRPM * RPM2AngVel,
+                _engineConfig.RedlineRPM * RPM2AngVel);
+
+            if (float.IsNaN(_engineAngularVelocity)) _engineAngularVelocity = _engineConfig.IdleRPM * RPM2AngVel;
+            if (float.IsNaN(correctionAcceleration)) correctionAcceleration = 0;
+            
+            Debug.Log(
+                $" Feedback impulse: {feedbackImpulse}\n" +
+            $" drive inertia: {driveInertia}\n" +
+            $"Clutch drag: {clutchDragImpulse}\n" +
+            $"Accumulated accel: {correctionAcceleration}"
+                       );
+                
+            return correctionAcceleration;
+        }
+        
+        
+        private float GetClutchDragImpulse(
+            float engineShaftSpeed, 
+            float gearboxInputShaftSpeed, 
+            float engineInertia, 
+            float drivetrainInertia, 
+            float totalRatio,
+            float engineImpulse,
+            float wheelImpulse,
+            float clutchEngagement, // [0..1] 0 - отжато (педаль выжата), 1 - прижато (педаль отпущена)
+            float clutchTorqueCapacity,
+            float deltaTime
+            ){
+    
+            var driveInertiaAtEngine = drivetrainInertia / (totalRatio * totalRatio);
+            var impulseLimit = clutchEngagement * clutchTorqueCapacity * deltaTime;
+            var speedDifference = gearboxInputShaftSpeed - engineShaftSpeed;
+            var impulseToMatchSpeeds = engineInertia * driveInertiaAtEngine * speedDifference;
+            
+            // учёт фактического импульса от колёс
+            var wheelImpulseAtEngine = engineInertia * (wheelImpulse / totalRatio);
+            var engineTorqueContribution = driveInertiaAtEngine * engineImpulse;
+            
+            var idealImpulse =
+                (impulseToMatchSpeeds - wheelImpulseAtEngine + engineTorqueContribution)
+                / (engineInertia + driveInertiaAtEngine);
+    
+            return Mathf.Clamp(idealImpulse, -impulseLimit, impulseLimit);
         }
     }
 }

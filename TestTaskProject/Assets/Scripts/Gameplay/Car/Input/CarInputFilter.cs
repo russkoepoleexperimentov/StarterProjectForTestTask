@@ -73,9 +73,9 @@ namespace Gameplay.Car.Input
 
         // на задней передаче педали меняются местами: газ всегда едет в сторону передачи
         private static float SelectThrottlePedal(DrivetrainInputModel raw, int gear)
-            => gear < 0 ? raw.Brake : raw.Throttle;
+            => gear < 0 ? raw.BrakePedal : raw.ThrottlePedal;
 
         private static float SelectBrakePedal(DrivetrainInputModel raw, int gear)
-            => gear < 0 ? raw.Throttle : raw.Brake;
+            => gear < 0 ? raw.ThrottlePedal : raw.BrakePedal;
     }
 }

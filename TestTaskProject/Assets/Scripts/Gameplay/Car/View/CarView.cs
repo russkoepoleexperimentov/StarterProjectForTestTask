@@ -46,21 +46,6 @@ namespace Gameplay.Car.View
             }
         }
 
-        public float AverageWheelsRpm {
-            get {
-                float rpm = 0;
-                foreach (var axle in _axles)
-                {
-                    if (axle.IsDrivable)
-                    {
-                        rpm += axle.LeftWheel.RPM;
-                        rpm += axle.RightWheel.RPM;
-                    }
-                }
-                return rpm / Mathf.Max(NumDriveWheels, 1);
-            }
-        }
-
         private const float MPS_TO_KPH = 3.6f;
 
         private void Start()
@@ -83,10 +68,7 @@ namespace Gameplay.Car.View
 
                 if (axle.IsDrivable)
                 {
-                    ApplyForBothWheels(axle, w => w.MotorTorque = drivetrainOutput.MotorTorque * fraction);
-
-                    // торможение двигателем доезжает только до ведущих колёс
-                    brakeTorque += drivetrainOutput.EngineBrakeTorque * fraction;
+                    ApplyForBothWheels(axle, w => w.AddAcceleration(drivetrainOutput.AngularAcceleration));
                 }
 
                 ApplyForBothWheels(axle, w => w.BrakeTorque = brakeTorque);
@@ -94,6 +76,30 @@ namespace Gameplay.Car.View
 
                 ApplyForBothWheels(axle, w => w.ApplyVisual());
             }
+        }
+
+        public void FetchFeedback(out float averageDriveWheelsRpm, out float impulse, out float driveInertia)
+        {
+            int numDriveWheels = 0;
+            averageDriveWheelsRpm = 0;
+            impulse = 0;
+            driveInertia = 0;
+            foreach (var axle in _axles)
+            {
+                if (axle.IsDrivable)
+                {
+                    averageDriveWheelsRpm += axle.LeftWheel.RPM;
+                    averageDriveWheelsRpm += axle.RightWheel.RPM;
+                    impulse += axle.LeftWheel.FeedbackImpulse;
+                    impulse += axle.RightWheel.FeedbackImpulse;
+                    driveInertia += axle.LeftWheel.Inertia;
+                    driveInertia += axle.RightWheel.Inertia;
+                    numDriveWheels += 2;
+                }
+            }
+            
+            if(averageDriveWheelsRpm > 0)
+                averageDriveWheelsRpm /= numDriveWheels;
         }
 
         private void ApplyForBothWheels(Axle axle, Action<CarWheelView> func)

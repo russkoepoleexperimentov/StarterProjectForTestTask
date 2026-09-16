@@ -79,13 +79,5 @@ namespace Gameplay.Car.Model
 
             return friction * (1f - Mathf.Clamp01(throttle));
         }
-
-        public float EvaluateEngineBrakeFade(float engineRpm)
-        {
-            if (_engineConfig.EngineBrakeFadeRPM <= 0f)
-                return 1f;
-
-            return Mathf.Clamp01((engineRpm - _engineConfig.IdleRPM) / _engineConfig.EngineBrakeFadeRPM);
-        }
     }
 }

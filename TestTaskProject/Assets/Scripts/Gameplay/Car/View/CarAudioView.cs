@@ -52,14 +52,16 @@ namespace Gameplay.Car.View
 
         public void ApplySkidmarksSound()
         {
-            var slip = _view.Axles.Max(axle => Mathf.Max(axle.LeftWheel.GetSlip(), 
-                axle.RightWheel.GetSlip()));
+            var slip = _view.Axles.Max(axle => Mathf.Max(axle.LeftWheel.GetSlipVelocity(), 
+                axle.RightWheel.GetSlipVelocity()));
             
             var pitch = _wheelEffectsConfig.SkidmarksStepPerMeterSlip * 
                         Mathf.Max(0, slip - _wheelEffectsConfig.SkidmarksMinSlip);
-            
-            _skidSource.pitch = Mathf.Clamp(pitch, _wheelEffectsConfig.SkidmarksMinPitch, _wheelEffectsConfig.SkidmarksMaxPitch);
-            _skidSource.volume = Mathf.Clamp01(pitch);
+
+            _skidSource.pitch = 1;//Mathf.Clamp(pitch, _wheelEffectsConfig.SkidmarksMinPitch, _wheelEffectsConfig.SkidmarksMaxPitch);
+            _skidSource.volume = Mathf.Clamp01(slip * 0.00875f); //Mathf.Clamp01(pitch);
+            if (_skidSource.volume < 0.1f)
+                _skidSource.volume = 0;
         }
 
         public void PlayHandbrakePull()

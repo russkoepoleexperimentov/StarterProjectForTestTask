@@ -69,6 +69,10 @@ UI представляет собой экран, который открыва
 - Unity Standard Assets 5.x - звуки
 - https://stmods.org/spintires/mods/vaz_2115_pyatnashka_by_vladlen_phoenix_for_spintires/ - звуки
 - https://libertycity.ru/files/gta-san-andreas/166669-vaz-2114-dag-edit-ivf.html - модель с текстурами
+- https://github.com/Engine-Simulator/engine-sim-community-edition - симулятор двигателя (для генерации звуков)
+- https://catalog.engine-sim.parts/parts/2609 - профиль нужного двигателя
+- https://www.youtube.com/watch?v=kmL7DnxeUTE
+- https://www.youtube.com/watch?v=2d_kAyWs1_A
 
 # Известные проблемы
 - При старте колёса испускают звук пробуксовки - баг WheelCollider (скорее всего - не хватает суб-шагов симуляции)

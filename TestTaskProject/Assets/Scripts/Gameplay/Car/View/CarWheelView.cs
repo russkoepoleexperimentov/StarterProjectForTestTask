@@ -32,6 +32,10 @@ namespace Gameplay.Car.View
 
         private float _lastSpringLength;
 
+        private float _lngSlip;
+        private float _latSlip;
+        private float _slipVelocity;
+
         
         private Rigidbody _carRigidBody;
         private float _wheelAngularVelocity = 0f;
@@ -41,6 +45,10 @@ namespace Gameplay.Car.View
         public float MotorTorque { get; set; } = 0;
         public float BrakeTorque { get; set; } = 0;
         public float RPM => _wheelAngularVelocity * 30 / Mathf.PI;
+
+        // slip integration constants
+        private const float RELAX_LNG = .01f; 
+        private const float RELAX_LAT = .01f; 
 
         private void Awake()
         {
@@ -118,6 +126,9 @@ namespace Gameplay.Car.View
 
             var lngSlipRatio = contactLngVelocityAbs == 0f ? 0f : vWheelDelta / contactLngVelocityAbs;
             var latSlipRatio = CalculateLatSlipRatio(contactLngVelocity, contactLatVelocity);
+
+            
+            _slipVelocity = Mathf.Sqrt(vWheelDelta * vWheelDelta + contactLatVelocity * contactLatVelocity);
             
             // friction circle
             var slipUsage = Mathf.Sqrt(lngSlipRatio * lngSlipRatio + latSlipRatio * latSlipRatio);
@@ -128,8 +139,15 @@ namespace Gameplay.Car.View
                 latSlipRatio /= slipUsage;
             }
             
-            var latSlip = SidewaysSlipRemap.Evaluate(latSlipRatio) * -Mathf.Sign(contactLatVelocity);
-            var lngSlip = ForwardSlipRemap.Evaluate(Mathf.Abs(lngSlipRatio)) * Mathf.Sign(lngSlipRatio);
+            var desiredLatSlip = SidewaysSlipRemap.Evaluate(latSlipRatio) * -Mathf.Sign(contactLatVelocity);
+            var desiredLngSlip = ForwardSlipRemap.Evaluate(Mathf.Abs(lngSlipRatio)) * Mathf.Sign(lngSlipRatio);
+            
+            // slip integration
+            var lngSlipCoeff = Mathf.Clamp01(Mathf.Abs(vWheelDelta) / RELAX_LNG * Time.fixedDeltaTime);
+            _lngSlip += (desiredLngSlip - _lngSlip) * lngSlipCoeff;
+            
+            var latSlipCoeff  = Mathf.Clamp01(Mathf.Abs(contactLatVelocity) / RELAX_LAT * Time.fixedDeltaTime);
+            _latSlip += (desiredLatSlip - _latSlip) * latSlipCoeff;
 
             var angularAcceleration = -tWheel / wheelInertia;
             _wheelAngularVelocity += angularAcceleration * Time.fixedDeltaTime;
@@ -149,8 +167,8 @@ namespace Gameplay.Car.View
             _rollRadians += _wheelAngularVelocity * Time.fixedDeltaTime;
             _rollRadians %= Mathf.PI * 2;
             
-            localForce.x = latSlip * tireMaxForce;
-            localForce.z = lngSlip * tireMaxForce;
+            localForce.x = _latSlip * tireMaxForce;
+            localForce.z = _lngSlip * tireMaxForce;
             
             var latForceVector = contactRight * localForce.x;
             var lngForceVector = contactForward * localForce.z;
@@ -158,8 +176,8 @@ namespace Gameplay.Car.View
             _carRigidBody.AddForceAtPosition(loadForceVector + lngForceVector + latForceVector, rayEndPoint,
                 ForceMode.Force);
             
-            Debug.DrawRay(rayEndPoint, lngForceVector, Color.blue);
-            Debug.DrawRay(rayEndPoint, loadForceVector, Color.blue);
+            Debug.DrawRay(rayEndPoint, contactRight * _latSlip, Color.blue);
+            Debug.DrawRay(rayEndPoint, contactForward * _lngSlip, Color.blue);
             Debug.DrawRay(rayEndPoint, WheelForward * Mathf.Sign(MotorTorque), Color.green);
             Debug.DrawRay(rayEndPoint, WheelForward * Mathf.Sign(BrakeTorque), Color.red);
 
@@ -172,10 +190,7 @@ namespace Gameplay.Car.View
             _lastSpringLength = springLength;
         }
 
-        public float GetSlip()
-        {
-            return 0f; 
-        }
+        public float GetSlipVelocity() => _slipVelocity;
 
         private float CalculateLatSlipRatio(float vLong, float vLat)
         {

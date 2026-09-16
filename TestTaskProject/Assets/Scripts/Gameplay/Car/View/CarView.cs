@@ -53,8 +53,8 @@ namespace Gameplay.Car.View
                 {
                     if (axle.IsDrivable)
                     {
-                        rpm += axle.LeftWheel.Collider.rpm;
-                        rpm += axle.RightWheel.Collider.rpm;
+                        rpm += axle.LeftWheel.RPM;
+                        rpm += axle.RightWheel.RPM;
                     }
                 }
                 return rpm / Mathf.Max(NumDriveWheels, 1);
@@ -83,14 +83,14 @@ namespace Gameplay.Car.View
 
                 if (axle.IsDrivable)
                 {
-                    ApplyForBothWheels(axle, w => w.Collider.motorTorque = drivetrainOutput.MotorTorque * fraction);
+                    ApplyForBothWheels(axle, w => w.MotorTorque = drivetrainOutput.MotorTorque * fraction);
 
                     // торможение двигателем доезжает только до ведущих колёс
                     brakeTorque += drivetrainOutput.EngineBrakeTorque * fraction;
                 }
 
-                ApplyForBothWheels(axle, w => w.Collider.brakeTorque = brakeTorque);
-                ApplyForBothWheels(axle, w => w.Collider.steerAngle = axle.SteerFactor * drivetrainOutput.SteerAngle);
+                ApplyForBothWheels(axle, w => w.BrakeTorque = brakeTorque);
+                ApplyForBothWheels(axle, w => w.SteerAngle = axle.SteerFactor * drivetrainOutput.SteerAngle);
 
                 ApplyForBothWheels(axle, w => w.ApplyVisual());
             }

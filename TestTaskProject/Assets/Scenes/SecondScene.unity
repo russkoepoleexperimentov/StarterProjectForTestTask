@@ -8473,11 +8473,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!4 &89115944 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4252074655309166, guid: 02e641040fb499c49a848e40f535164a, type: 3}
-  m_PrefabInstance: {fileID: 683000846}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &89410227
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11402,7 +11397,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
-  _visual: {fileID: 1404575258}
+  <Radius>k__BackingField: 0.3
+  <Mass>k__BackingField: 20
+  <SpringStiffness>k__BackingField: 30000
+  <SpringDamper>k__BackingField: 1500
+  <SpringMaxLength>k__BackingField: 0.5
+  <ForwardSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <SidewaysSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _visual: {fileID: 0}
 --- !u!1 &115697105
 GameObject:
   m_ObjectHideFlags: 0
@@ -11412,7 +11424,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 115697106}
-  - component: {fileID: 115697107}
   - component: {fileID: 115697108}
   m_Layer: 3
   m_Name: LeftRear
@@ -11437,45 +11448,6 @@ Transform:
   - {fileID: 1181227718}
   m_Father: {fileID: 1544223786}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!146 &115697107
-WheelCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 115697105}
-  serializedVersion: 2
-  m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.33
-  m_SuspensionSpring:
-    spring: 30000
-    damper: 3000
-    targetPosition: 0.5
-  m_SuspensionDistance: 0.3
-  m_ForceAppPointDistance: 0.39
-  m_Mass: 20
-  m_WheelDampingRate: 0.25
-  m_ForwardFriction:
-    m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
-    m_Stiffness: 1
-  m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
-    m_Stiffness: 1
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_Enabled: 1
-  m_ProvidesContacts: 0
 --- !u!114 &115697108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11488,7 +11460,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
-  _visual: {fileID: 1181227718}
+  <Radius>k__BackingField: 0.3
+  <Mass>k__BackingField: 20
+  <SpringStiffness>k__BackingField: 30000
+  <SpringDamper>k__BackingField: 1500
+  <SpringMaxLength>k__BackingField: 0.3
+  <ForwardSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 4
+      outSlope: 4
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.7
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <SidewaysSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 6.6666665
+      outSlope: 6.6666665
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.15
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _visual: {fileID: 0}
 --- !u!1001 &115992503
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14030,7 +14082,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
-  _visual: {fileID: 724868045}
+  <Radius>k__BackingField: 0.3
+  <Mass>k__BackingField: 20
+  <SpringStiffness>k__BackingField: 30000
+  <SpringDamper>k__BackingField: 1500
+  <SpringMaxLength>k__BackingField: 0.5
+  <ForwardSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <SidewaysSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _visual: {fileID: 0}
 --- !u!1001 &146133498
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42276,11 +42345,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!4 &401325171 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4068913174666622, guid: 02e641040fb499c49a848e40f535164a, type: 3}
-  m_PrefabInstance: {fileID: 683000846}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &402905305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -75232,11 +75296,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!4 &724868045 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4429808383623004, guid: 02e641040fb499c49a848e40f535164a, type: 3}
-  m_PrefabInstance: {fileID: 683000846}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &725569111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -99425,7 +99484,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 941782439}
-  - component: {fileID: 941782440}
   - component: {fileID: 941782441}
   m_Layer: 3
   m_Name: RightFront
@@ -99450,45 +99508,6 @@ Transform:
   - {fileID: 36777858}
   m_Father: {fileID: 1544223786}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!146 &941782440
-WheelCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 941782438}
-  serializedVersion: 2
-  m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.33
-  m_SuspensionSpring:
-    spring: 30000
-    damper: 3000
-    targetPosition: 0.5
-  m_SuspensionDistance: 0.3
-  m_ForceAppPointDistance: 0.39
-  m_Mass: 20
-  m_WheelDampingRate: 0.25
-  m_ForwardFriction:
-    m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
-    m_Stiffness: 1
-  m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
-    m_Stiffness: 1
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_Enabled: 1
-  m_ProvidesContacts: 0
 --- !u!114 &941782441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99501,7 +99520,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
-  _visual: {fileID: 36777858}
+  <Radius>k__BackingField: 0.3
+  <Mass>k__BackingField: 20
+  <SpringStiffness>k__BackingField: 30000
+  <SpringDamper>k__BackingField: 1500
+  <SpringMaxLength>k__BackingField: 0.3
+  <ForwardSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 4
+      outSlope: 4
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.7
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <SidewaysSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 6.6666665
+      outSlope: 6.6666665
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.15
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _visual: {fileID: 0}
 --- !u!1001 &942123282
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -116970,7 +117069,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1094504647}
-  - component: {fileID: 1094504646}
   - component: {fileID: 1094504645}
   m_Layer: 3
   m_Name: RightRear
@@ -116991,46 +117089,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
-  _visual: {fileID: 91107424}
---- !u!146 &1094504646
-WheelCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1094504644}
-  serializedVersion: 2
-  m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.33
-  m_SuspensionSpring:
-    spring: 30000
-    damper: 3000
-    targetPosition: 0.5
-  m_SuspensionDistance: 0.3
-  m_ForceAppPointDistance: 0.39
-  m_Mass: 20
-  m_WheelDampingRate: 0.25
-  m_ForwardFriction:
-    m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
-    m_Stiffness: 1
-  m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
-    m_Stiffness: 1
-  m_IncludeLayers:
+  <Radius>k__BackingField: 0.3
+  <Mass>k__BackingField: 20
+  <SpringStiffness>k__BackingField: 30000
+  <SpringDamper>k__BackingField: 1500
+  <SpringMaxLength>k__BackingField: 0.3
+  <ForwardSlipRemap>k__BackingField:
     serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 4
+      outSlope: 4
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.7
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <SidewaysSlipRemap>k__BackingField:
     serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_Enabled: 1
-  m_ProvidesContacts: 0
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 6.6666665
+      outSlope: 6.6666665
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.15
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _visual: {fileID: 0}
 --- !u!4 &1094504647
 Transform:
   m_ObjectHideFlags: 0
@@ -137529,7 +137668,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
-  _visual: {fileID: 401325171}
+  <Radius>k__BackingField: 0.3
+  <Mass>k__BackingField: 20
+  <SpringStiffness>k__BackingField: 30000
+  <SpringDamper>k__BackingField: 1500
+  <SpringMaxLength>k__BackingField: 0.5
+  <ForwardSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <SidewaysSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _visual: {fileID: 0}
 --- !u!1001 &1272093554
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -153380,11 +153536,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6744948774040422585, guid: f0fa6751ecba8a44b87f542ef29ff46f, type: 3}
   m_PrefabInstance: {fileID: 1404506034}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1404575258 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4944351361650126, guid: 02e641040fb499c49a848e40f535164a, type: 3}
-  m_PrefabInstance: {fileID: 683000846}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1404607421
 GameObject:
   m_ObjectHideFlags: 0
@@ -159465,7 +159616,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
-  _visual: {fileID: 89115944}
+  <Radius>k__BackingField: 0.3
+  <Mass>k__BackingField: 20
+  <SpringStiffness>k__BackingField: 30000
+  <SpringDamper>k__BackingField: 1500
+  <SpringMaxLength>k__BackingField: 0.5
+  <ForwardSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <SidewaysSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _visual: {fileID: 0}
 --- !u!1001 &1456546278
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -229479,7 +229647,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2065148288}
-  - component: {fileID: 2065148289}
   - component: {fileID: 2065148290}
   m_Layer: 3
   m_Name: LeftFront
@@ -229504,45 +229671,6 @@ Transform:
   - {fileID: 1551117223}
   m_Father: {fileID: 1544223786}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!146 &2065148289
-WheelCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2065148287}
-  serializedVersion: 2
-  m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.33
-  m_SuspensionSpring:
-    spring: 30000
-    damper: 3000
-    targetPosition: 0.5
-  m_SuspensionDistance: 0.3
-  m_ForceAppPointDistance: 0.39
-  m_Mass: 20
-  m_WheelDampingRate: 0.25
-  m_ForwardFriction:
-    m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
-    m_Stiffness: 1
-  m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
-    m_Stiffness: 1
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_Enabled: 1
-  m_ProvidesContacts: 0
 --- !u!114 &2065148290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229555,7 +229683,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d91b7b6ce7e47769f4850e6e7c3f0f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
-  _visual: {fileID: 1551117223}
+  <Radius>k__BackingField: 0.3
+  <Mass>k__BackingField: 20
+  <SpringStiffness>k__BackingField: 30000
+  <SpringDamper>k__BackingField: 1500
+  <SpringMaxLength>k__BackingField: 0.3
+  <ForwardSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 4
+      outSlope: 4
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.7
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <SidewaysSlipRemap>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 6.6666665
+      outSlope: 6.6666665
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.15
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _visual: {fileID: 0}
 --- !u!1001 &2066124163
 PrefabInstance:
   m_ObjectHideFlags: 0

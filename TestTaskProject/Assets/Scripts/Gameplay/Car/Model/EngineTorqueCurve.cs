@@ -16,34 +16,63 @@ namespace Gameplay.Car.Model
         {
             float rpm = Mathf.Max(0f, engineRpm);
 
-            const float rpmToOmega = Mathf.PI * 2f / 60f;
-            float omegaAtMaxPower = _engineConfig.MaxPowerRPM * rpmToOmega;
-            float torqueAtMaxPower = _engineConfig.MaxPowerWatts / omegaAtMaxPower;
-
             if (rpm <= 0f)
                 return 0f;
 
-            if (rpm <= _engineConfig.MaxTorqueRPM)
+            const float rpmToOmega = Mathf.PI * 2f / 60f;
+
+            float omegaAtMaxPower =
+                _engineConfig.MaxPowerRPM * rpmToOmega;
+
+            float torqueAtMaxPower =
+                _engineConfig.MaxPowerWatts / omegaAtMaxPower;
+
+            float maxTorque = _engineConfig.MaxTorqueNm;
+            float maxTorqueRpm = _engineConfig.MaxTorqueRPM;
+            float maxPowerRpm = _engineConfig.MaxPowerRPM;
+            float redlineRpm = _engineConfig.RedlineRPM;
+
+            if (rpm <= maxTorqueRpm)
             {
-                float t = Mathf.InverseLerp(0, _engineConfig.MaxTorqueRPM, rpm);
-                return Mathf.Lerp(_engineConfig.MaxTorqueNm * _engineConfig.IdleTorqueFraction, _engineConfig.MaxTorqueNm, t);
+                float t = Mathf.InverseLerp(0f, maxTorqueRpm, rpm);
+
+                float idleTorque =
+                    maxTorque * _engineConfig.IdleTorqueFraction;
+
+                float curve = t * t;
+
+                return Mathf.Lerp(idleTorque, maxTorque, curve);
             }
 
-            if (rpm <= _engineConfig.MaxPowerRPM)
+            if (rpm <= maxPowerRpm)
             {
-                float t = Mathf.InverseLerp(_engineConfig.MaxTorqueRPM, _engineConfig.MaxPowerRPM, rpm);
-                return Mathf.Lerp(_engineConfig.MaxTorqueNm, torqueAtMaxPower, t);
+                float t = Mathf.InverseLerp(
+                    maxTorqueRpm,
+                    maxPowerRpm,
+                    rpm);
+
+                float curve = 1f - t * t;
+
+                return Mathf.Lerp(
+                    torqueAtMaxPower,
+                    maxTorque,
+                    curve);
             }
 
-            if (rpm <= _engineConfig.RedlineRPM)
+            if (rpm <= redlineRpm)
             {
-                float t = Mathf.InverseLerp(_engineConfig.MaxPowerRPM, _engineConfig.RedlineRPM, rpm);
-                return Mathf.Lerp(torqueAtMaxPower, 0f, t);
+                float t = Mathf.InverseLerp(
+                    maxPowerRpm,
+                    redlineRpm,
+                    rpm);
+
+                float curve = (1f - t) * (1f - t);
+
+                return torqueAtMaxPower * curve;
             }
 
             return 0f;
         }
-
         public float EvaluateFriction(float engineRpm, float throttle)
         {
             var friction = _engineConfig.BaseFriction + engineRpm * _engineConfig.RPMFriction;

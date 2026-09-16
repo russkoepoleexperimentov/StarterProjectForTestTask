@@ -24,7 +24,7 @@ namespace Gameplay.Car.Input
             _state = state;
         }
 
-        public DrivetrainInputModel Process(DrivetrainInputModel raw, float speedKph, float deltaTime)
+        public DrivetrainInputModel Process(DrivetrainInputModel raw, float speedKph, float driveWheelsRpm, float deltaTime)
         {
             // снимаем ДО тика коробки: это же значение уходит и в отсечку газа, и в сцепление
             var isShifting = _gearbox.IsShifting;
@@ -45,7 +45,8 @@ namespace Gameplay.Car.Input
             var brake = _filter.ApplyPassiveBraking(brakePedal, throttle, _gearbox.CurrentGear);
 
             var handbrake = raw.Handbrake;
-            var clutch = _autoGearbox.UpdateClutch(speedKph, isShifting, throttle, raw.ClutchPedal, deltaTime);
+            var clutch = _autoGearbox.UpdateClutch(speedKph, isShifting, throttle, raw.ClutchPedal, driveWheelsRpm,
+                handbrake > 0f, deltaTime);
             var steering = _filter.FilterSteering(raw.Steering, handbrake > 0, speedKph, deltaTime);
 
             return new DrivetrainInputModel(throttle, brake, steering, handbrake, clutch, isShifting);

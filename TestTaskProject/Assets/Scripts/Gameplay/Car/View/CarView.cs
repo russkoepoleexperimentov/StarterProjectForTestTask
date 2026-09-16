@@ -68,7 +68,7 @@ namespace Gameplay.Car.View
 
                 if (axle.IsDrivable)
                 {
-                    ApplyForBothWheels(axle, w => w.AddAcceleration(drivetrainOutput.AngularAcceleration));
+                    ApplyForBothWheels(axle, w => w.MotorTorque = (w.Inertia * drivetrainOutput.AngularAcceleration) / Time.fixedDeltaTime);
                 }
 
                 ApplyForBothWheels(axle, w => w.BrakeTorque = brakeTorque);
@@ -98,7 +98,7 @@ namespace Gameplay.Car.View
                 }
             }
             
-            if(averageDriveWheelsRpm > 0)
+            if(numDriveWheels > 0)
                 averageDriveWheelsRpm /= numDriveWheels;
         }
 

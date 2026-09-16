@@ -16,7 +16,6 @@ namespace Gameplay.Car.Model
         private readonly CarStateModel _stateModel;
 
         private float _engineAngularVelocity;
-        private float _differentialVelocity;
         private float _velocity;
 
         private const float RPM2AngVel = Mathf.PI / 30;
@@ -70,40 +69,32 @@ namespace Gameplay.Car.Model
             var clutchEngagement = Mathf.Clamp01(1f - input.ClutchPedal);
             var clutchDragImpulse = 0f;
             
+            var differentialVelocity = averageWheelsRpm * RPM2AngVel;
+            
 
-            if (!Mathf.Approximately(clutchEngagement, 0) && ratio != 0 && !Mathf.Approximately(feedbackImpulse, 0))
+            if (!Mathf.Approximately(clutchEngagement, 0) && ratio != 0)
             {
-                var clutchSpeed = _differentialVelocity * ratio;
+                var clutchSpeed = differentialVelocity * ratio;
                 clutchDragImpulse = GetClutchDragImpulse(_engineAngularVelocity, clutchSpeed, _engineConfig.InertiaKgM, driveInertia, ratio, netTorqueImpulse, feedbackImpulse, clutchEngagement, 500, deltaTime);
             }
             
             if(float.IsNaN(clutchDragImpulse)) clutchDragImpulse = 0;
 
             var impulseToEngine = netTorqueImpulse + clutchDragImpulse;
-            var impulseToDifferential = feedbackImpulse - clutchDragImpulse * ratio;
-            
+            // реакцию дороги/тормоза/сопротивления колесо применяет само - feedbackImpulse нужен
+            // только для решения сцепления, колёсам отдаём лишь то, что пришло от двигателя
+            var impulseToDifferential = -clutchDragImpulse * ratio;
+
             _engineAngularVelocity += impulseToEngine / _engineConfig.InertiaKgM;
-            _differentialVelocity += impulseToDifferential / driveInertia;
+            var differentialAccel = driveInertia > 0f ? impulseToDifferential / driveInertia : 0f;
 
-            if (float.IsNaN(_differentialVelocity)) _differentialVelocity = 0f;
-            
-            var differentialRealVelocity = averageWheelsRpm * RPM2AngVel;
-            var correctionAcceleration = _differentialVelocity - differentialRealVelocity;
-
-            _engineAngularVelocity = Mathf.Clamp(_engineAngularVelocity, _engineConfig.IdleRPM * RPM2AngVel,
-                _engineConfig.RedlineRPM * RPM2AngVel);
-
-            if (float.IsNaN(_engineAngularVelocity)) _engineAngularVelocity = _engineConfig.IdleRPM * RPM2AngVel;
-            if (float.IsNaN(correctionAcceleration)) correctionAcceleration = 0;
-            
-            Debug.Log(
-                $" Feedback impulse: {feedbackImpulse}\n" +
-            $" drive inertia: {driveInertia}\n" +
-            $"Clutch drag: {clutchDragImpulse}\n" +
-            $"Accumulated accel: {correctionAcceleration}"
-                       );
+            // prevent engine from stalling
+            if (_engineAngularVelocity < _engineConfig.IdleRPM * RPM2AngVel)
+            {
+                _engineAngularVelocity = _engineConfig.IdleRPM * RPM2AngVel;
+            }
                 
-            return correctionAcceleration;
+            return differentialAccel;
         }
         
         
@@ -125,12 +116,11 @@ namespace Gameplay.Car.Model
             var speedDifference = gearboxInputShaftSpeed - engineShaftSpeed;
             var impulseToMatchSpeeds = engineInertia * driveInertiaAtEngine * speedDifference;
             
-            // учёт фактического импульса от колёс
-            var wheelImpulseAtEngine = engineInertia * (wheelImpulse / totalRatio);
+            // импульс от колёс не учитываем: скорость вала берётся с колёс, которые его уже применили
             var engineTorqueContribution = driveInertiaAtEngine * engineImpulse;
-            
+
             var idealImpulse =
-                (impulseToMatchSpeeds - wheelImpulseAtEngine + engineTorqueContribution)
+                (impulseToMatchSpeeds - engineTorqueContribution)
                 / (engineInertia + driveInertiaAtEngine);
     
             return Mathf.Clamp(idealImpulse, -impulseLimit, impulseLimit);

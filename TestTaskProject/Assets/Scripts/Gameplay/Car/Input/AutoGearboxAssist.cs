@@ -18,6 +18,7 @@ namespace Gameplay.Car.Input
         private float _clutchTimeRamp;   // прогресс выпускания педали сцепления
 
         private const float STANDSTILL_SPEED_KPH = 1f;
+        private const float ANTI_STALL_RPM_MARGIN = 200f;
 
         public AutoGearboxAssist(
             GearboxModel gearbox,
@@ -74,13 +75,22 @@ namespace Gameplay.Car.Input
             }
         }
 
-        public float UpdateClutch(float speedKph, bool isShifting, float throttle, float clutchInput, float deltaTime)
+        public float UpdateClutch(float speedKph, bool isShifting, float throttle, float clutchInput, float driveWheelsRpm,
+            bool handbrake, float deltaTime)
         {
-            if (_gearbox.CurrentGear == 0 || isShifting)
+            // анти-заглушание: без газа, когда колёса крутят вал сцепления медленнее холостых,
+            // двигатель не должен тащить машину - иначе удержание холостых толкает её с бесконечным моментом.
+            // смотрим на вал, а не на двигатель: выжатый двигатель всегда на холостых и сцепление бы не вернулось
+            var clutchShaftRpm = Mathf.Abs(driveWheelsRpm * _gearbox.CurrentRatio);
+            var isIdleStall = throttle < _carSystemsConfig.PedalThreshold
+                              && clutchShaftRpm < _engineConfig.IdleRPM + ANTI_STALL_RPM_MARGIN;
+
+            // ручник выжимает сцепление, чтобы не бороться с двигателем
+            if (_gearbox.CurrentGear == 0 || isShifting || handbrake || isIdleStall)
             {
                 _clutchEngagement = 0f;
                 _clutchTimeRamp = 0f;
-                return _clutchEngagement;
+                return 1;
             }
 
             var engageSpeed = _gearboxUsageConfig.ClutchEngageTimeSeconds > 0f

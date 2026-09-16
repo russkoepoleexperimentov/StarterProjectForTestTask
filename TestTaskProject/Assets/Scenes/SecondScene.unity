@@ -11462,8 +11462,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
   <Radius>k__BackingField: 0.3
   <Mass>k__BackingField: 20
-  <SpringStiffness>k__BackingField: 30000
-  <SpringDamper>k__BackingField: 1500
+  <SpringStiffness>k__BackingField: 15000
+  <SpringDamper>k__BackingField: 1000
   <SpringMaxLength>k__BackingField: 0.3
   <ForwardSlipRemap>k__BackingField:
     serializedVersion: 2
@@ -117091,8 +117091,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.View.CarWheelView
   <Radius>k__BackingField: 0.3
   <Mass>k__BackingField: 20
-  <SpringStiffness>k__BackingField: 30000
-  <SpringDamper>k__BackingField: 1500
+  <SpringStiffness>k__BackingField: 15000
+  <SpringDamper>k__BackingField: 1000
   <SpringMaxLength>k__BackingField: 0.3
   <ForwardSlipRemap>k__BackingField:
     serializedVersion: 2

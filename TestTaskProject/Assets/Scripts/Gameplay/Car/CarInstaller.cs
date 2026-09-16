@@ -21,8 +21,6 @@ namespace Gameplay.Car
         [SerializeField] private CarSystemsConfig _carSystemsConfig;
         [SerializeField] private CarWheelEffectsConfig _wheelEffectsConfig;
 
-        [SerializeField] private CarAudioConfig _audioConfig;
-
         [SerializeField] private bool _isPlayerCar = true;
 
         public override void InstallBindings()
@@ -44,7 +42,6 @@ namespace Gameplay.Car
             Container.Bind<CarInputProcessor>().AsSingle();
             Container.Bind<CarStateModel>().AsSingle();
 
-            Container.Bind<CarAudioConfig>().FromInstance(_audioConfig).AsSingle();
             Container.BindInterfacesAndSelfTo<CarAudioPresenter>().AsSingle();
             Container.Bind<CarAudioModel>().AsSingle();
             Container.Bind<CarAudioView>().FromInstance(_carAudioView).AsSingle();

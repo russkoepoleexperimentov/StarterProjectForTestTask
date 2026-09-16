@@ -18,7 +18,5 @@ namespace Gameplay.Car.Configs
         [field: SerializeField] public float ClutchLockSpeedKph { get; private set; } = 15f;
         // минимальная доля момента, которую передаёт буксующее сцепление (иначе не тронуться)
         [field: SerializeField] public float MinClutchEngagement { get; private set; } = 0.15f;
-        // ограничение момента на колёсах, пока сцепление буксует
-        [field: SerializeField] public float MaxLaunchTorqueNm { get; private set; } = 2500f;
     }
 }

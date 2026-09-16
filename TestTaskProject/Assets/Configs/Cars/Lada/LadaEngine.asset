@@ -22,4 +22,4 @@ MonoBehaviour:
   <InertiaKgM>k__BackingField: 0.3
   <BaseFriction>k__BackingField: 25
   <RPMFriction>k__BackingField: 0.02
-  <EngineBrakeFadeRPM>k__BackingField: 400
+  <AudioConfig>k__BackingField: {fileID: 11400000, guid: 023b69facd194dc4e9c9b68ad133753f, type: 2}

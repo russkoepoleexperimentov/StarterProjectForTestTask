@@ -8,14 +8,10 @@ namespace Gameplay.Car.View
 {
     public class CarAudioView : MonoBehaviour
     {
-        private CarAudioConfig _audioConfig;
+        private EngineConfig _engineConfig;
         private CarWheelEffectsConfig _wheelEffectsConfig;
 
-        private AudioSource _accelLowSource;
-        private AudioSource _decelLowSource;
-
-        private AudioSource _accelHighSource;
-        private AudioSource _decelHighSource;
+        private AudioSource[] _engineSources;
 
         private AudioSource _skidSource;
         private AudioSource _oneShotSource;
@@ -23,15 +19,18 @@ namespace Gameplay.Car.View
         private CarView _view;
         
         [Inject]
-        public void Init(CarAudioConfig audioConfig, CarWheelEffectsConfig wheelEffectsConfig, CarView view)
+        public void Init(EngineConfig engineConfig, CarWheelEffectsConfig wheelEffectsConfig, CarView view)
         {
-            _audioConfig = audioConfig;
+            _engineConfig = engineConfig;
             _wheelEffectsConfig = wheelEffectsConfig;
 
-            _accelLowSource = CreateAudioSource(_audioConfig.AccelerationLow);
-            _decelLowSource = CreateAudioSource(_audioConfig.DecelerationLow);
-            _accelHighSource = CreateAudioSource(_audioConfig.AccelerationHigh);
-            _decelHighSource = CreateAudioSource(_audioConfig.DecelerationHigh);
+            var audio = _engineConfig.AudioConfig;
+            
+            _engineSources = new AudioSource[audio.Sounds.Length];
+            for (var i = 0; i < audio.Sounds.Length; i++)
+            {
+                _engineSources[i] = CreateAudioSource(audio.Sounds[i]);
+            }
 
             _skidSource = CreateAudioSource(_wheelEffectsConfig.SkidmarksClip);
             _oneShotSource = CreateOneShotAudioSource();
@@ -39,28 +38,45 @@ namespace Gameplay.Car.View
             _view = view;
         }
 
-        public void ApplyEngineSound(EngineAudioParametersModel model)
+        public void ApplyEngineClipConfiguration(float[] pitches, float[] volumes, bool[] actives)
         {
-            _accelLowSource.volume = model.LowAccelVolume;
-            _decelLowSource.volume = model.LowDecelVolume;
-            _accelHighSource.volume = model.HighAccelVolume;
-            _decelHighSource.volume = model.HighDecelVolume;
-            
-            _accelLowSource.pitch = _decelLowSource.pitch = model.LowPitch;
-            _accelHighSource.pitch = _decelHighSource.pitch = model.HighPitch;
+            for (var i = 0; i < _engineSources.Length; i++)
+            {
+                var source = _engineSources[i];
+                
+                source.enabled = actives[i];
+
+                if (source.enabled)
+                {
+                    if (!source.isPlaying)
+                    {
+                        source.Play();
+                    }
+                    
+                    source.volume = volumes[i];
+                    source.pitch = pitches[i];
+                }
+                else
+                {
+                    if (source.isPlaying)
+                    {
+                        source.Stop();
+                    }
+                }
+            }
         }
 
         public void ApplySkidmarksSound()
         {
             var slip = _view.Axles.Max(axle => Mathf.Max(axle.LeftWheel.GetSlipVelocity(), 
                 axle.RightWheel.GetSlipVelocity()));
-            
-            var pitch = _wheelEffectsConfig.SkidmarksStepPerMeterSlip * 
-                        Mathf.Max(0, slip - _wheelEffectsConfig.SkidmarksMinSlip);
 
-            _skidSource.pitch = 1;//Mathf.Clamp(pitch, _wheelEffectsConfig.SkidmarksMinPitch, _wheelEffectsConfig.SkidmarksMaxPitch);
-            _skidSource.volume = Mathf.Clamp01(slip * 0.00875f); //Mathf.Clamp01(pitch);
-            if (_skidSource.volume < 0.1f)
+            _skidSource.pitch =
+                Mathf.Clamp(
+                    slip * slip * _wheelEffectsConfig.SkidmarksPitchMultiplier, 0,
+                    _wheelEffectsConfig.SkidmarksPitchClamp);
+            _skidSource.volume = Mathf.Clamp01(slip * _wheelEffectsConfig.SkidmarksVolumeMultiplier);
+            if (_skidSource.volume < _wheelEffectsConfig.SkidmarksVolumeThreshold)
                 _skidSource.volume = 0;
         }
 

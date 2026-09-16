@@ -6,10 +6,10 @@ namespace Gameplay.Car.Configs
     public class CarWheelEffectsConfig : ScriptableObject
     {
         [field: SerializeField] public AudioClip SkidmarksClip { get; set; }
-        [field: SerializeField] public float SkidmarksMinPitch { get; set; } = 0.8f;
-        [field: SerializeField] public float SkidmarksMaxPitch { get; set; } = 2f;
-        [field: SerializeField] public float SkidmarksMinSlip { get; set; } = 0.4f;
-        [field: SerializeField] public float SkidmarksStepPerMeterSlip { get; set; } = 1f;
+        [field: SerializeField] public float SkidmarksPitchMultiplier { get; set; } = 0.02f;
+        [field: SerializeField] public float SkidmarksPitchClamp { get; set; } = 1.6f;
+        [field: SerializeField] public float SkidmarksVolumeMultiplier { get; set; } = 0.00875f;
+        [field: SerializeField] public float SkidmarksVolumeThreshold { get; set; } = 0.05f;
 
         [Header("Handbrake")]
         // одноразовый звук затяжки рычага

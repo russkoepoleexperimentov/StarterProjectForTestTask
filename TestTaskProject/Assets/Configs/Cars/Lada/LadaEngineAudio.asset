@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f633159406e346418e3988f2f81af27c, type: 3}
+  m_Name: LadaEngineAudio
+  m_EditorClassIdentifier: Gameplay::Gameplay.Car.Configs.EngineAudioConfig
+  <Sounds>k__BackingField:
+  - {fileID: 8300000, guid: 8d68cb5330ae97344875480571d3d08b, type: 3}
+  - {fileID: 8300000, guid: 30e7a772a3da5bd49ac6c441509081df, type: 3}
+  - {fileID: 8300000, guid: 844543fa5d54df14381012784884ed26, type: 3}
+  - {fileID: 8300000, guid: 88b6bde7ec8d61b40badcd9efef2e893, type: 3}
+  - {fileID: 8300000, guid: dfee76e0b09365143b9d5d15a3687397, type: 3}
+  - {fileID: 8300000, guid: cd545f31d8eef3247b712e35e9e9fab1, type: 3}
+  - {fileID: 8300000, guid: 875b1d57420c1474993b92c5ddf907b2, type: 3}
+  - {fileID: 8300000, guid: 57a516fc066bae04e88ee3bb3aa7221d, type: 3}
+  - {fileID: 8300000, guid: ef183810fbaf8a74f88d447599eb03e1, type: 3}
+  <FirstSoundRPM>k__BackingField: 1000
+  <SoundRPMStep>k__BackingField: 600
+  <MasterVolume>k__BackingField: 0.2
+  <WindowWidthFactor>k__BackingField: 0.5
+  <ThrottleVolumeCurve>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.8
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <VolumeSmoothingSpeed>k__BackingField: 6

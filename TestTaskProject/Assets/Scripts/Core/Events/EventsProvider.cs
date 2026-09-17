@@ -33,4 +33,12 @@ public static class EventsProvider
     public struct LoadingFinishedEvent
     {
     }
+
+    public struct ResumeGameEvent
+    {
+    }
+
+    public struct SaveAndExitEvent
+    {
+    }
 }

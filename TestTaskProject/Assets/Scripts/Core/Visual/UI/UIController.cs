@@ -4,8 +4,6 @@ using static EventsProvider;
 
 public class UIController : MonoBehaviour
 {
-    public ScreenController CurrentScreen => _currentScreen;
-
     [SerializeField] private ScreenView[] _views = new ScreenView[0];
 
     private ScreenController _currentScreen;
@@ -16,15 +14,15 @@ public class UIController : MonoBehaviour
     [Inject]
     public void Initialize(EventManager eventManager, DiContainer container)
     {
-        if (_eventManager != null)
-            _eventManager.Unsubscribe<OpenScreenEvent>(OpenScreen);
+        Unsubscribe();
 
         _eventManager = eventManager;
         _container = container;
         _eventManager.Subscribe<OpenScreenEvent>(OpenScreen);
+        _eventManager.Subscribe<CloseScreenEvent>(CloseScreen);
     }
 
-    public void OpenScreen(OpenScreenEvent screenEvent)
+    private void OpenScreen(OpenScreenEvent screenEvent)
     {
         if (string.IsNullOrEmpty(screenEvent.ScreenId)) return;
 
@@ -43,7 +41,14 @@ public class UIController : MonoBehaviour
         Debug.LogWarning($"Screen '{screenEvent.ScreenId}' is not registered.", this);
     }
 
-    public void Clear()
+    private void CloseScreen(CloseScreenEvent screenEvent)
+    {
+        if (_currentView == null || _currentView.Id != screenEvent.ScreenId) return;
+
+        Clear();
+    }
+
+    private void Clear()
     {
         if (_currentScreen != null)
         {
@@ -60,9 +65,15 @@ public class UIController : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (_eventManager != null)
-            _eventManager.Unsubscribe<OpenScreenEvent>(OpenScreen);
-
+        Unsubscribe();
         Clear();
+    }
+
+    private void Unsubscribe()
+    {
+        if (_eventManager == null) return;
+
+        _eventManager.Unsubscribe<OpenScreenEvent>(OpenScreen);
+        _eventManager.Unsubscribe<CloseScreenEvent>(CloseScreen);
     }
 }

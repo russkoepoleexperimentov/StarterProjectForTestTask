@@ -1,15 +1,13 @@
-using System;
 using Gameplay.Car.Model;
 using Gameplay.Car.Services;
 using Gameplay.Car.View;
 using UnityEngine;
-using Zenject;
 
 namespace Gameplay.Car.Presenter
 {
-    public class CarUIPresenter : IInitializable, IDisposable
+    public class CarUIScreenController : ScreenController
     {
-        private readonly CarUIView _view;
+        private readonly CarUIView _carView;
         private readonly PlayerCarRegistry _registry;
 
         private CarStateModel _state;
@@ -17,22 +15,26 @@ namespace Gameplay.Car.Presenter
         private const string NEUTRAL_GEAR_LABEL = "N";
         private const string REVERSE_GEAR_LABEL = "R";
 
-        public CarUIPresenter(CarUIView view, PlayerCarRegistry registry)
+        public CarUIScreenController(CarUIView view, EventManager eventManager, PlayerCarRegistry registry)
+            : base(view, eventManager)
         {
-            _view = view;
+            _carView = view;
             _registry = registry;
         }
 
-        public void Initialize()
+        public override void Open()
         {
+            base.Open();
+
             _registry.Changed += HandlePlayerCarChanged;
             HandlePlayerCarChanged(_registry.Current);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _registry.Changed -= HandlePlayerCarChanged;
             Unbind();
+            base.Dispose();
         }
 
         private void HandlePlayerCarChanged(CarStateModel state)
@@ -43,12 +45,12 @@ namespace Gameplay.Car.Presenter
 
             if (_state == null)
             {
-                _view.SetVisible(false);
+                _carView.SetVisible(false);
                 return;
             }
 
             _state.Changed += Render;
-            _view.SetVisible(true);
+            _carView.SetVisible(true);
             Render(_state);
         }
 
@@ -62,10 +64,10 @@ namespace Gameplay.Car.Presenter
 
         private void Render(CarStateModel state)
         {
-            _view.SetGear(FormatGear(state.GearIndex));
-            _view.SetSpeed(Mathf.RoundToInt(Mathf.Abs(state.SpeedKph)));
-            _view.SetRpm(Mathf.RoundToInt(state.RPM));
-            _view.SetInput(state.Throttle, state.Brake, state.Steering, state.ClutchEngagement);
+            _carView.SetGear(FormatGear(state.GearIndex));
+            _carView.SetSpeed(Mathf.RoundToInt(Mathf.Abs(state.SpeedKph)));
+            _carView.SetRpm(Mathf.RoundToInt(state.RPM));
+            _carView.SetInput(state.Throttle, state.Brake, state.Steering, state.ClutchEngagement);
         }
 
         private static string FormatGear(int gearIndex)

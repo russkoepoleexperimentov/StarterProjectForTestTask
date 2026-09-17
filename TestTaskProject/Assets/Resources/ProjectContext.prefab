@@ -121,6 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1136316804216191607}
   - component: {fileID: 733126402583425564}
+  - component: {fileID: 2066479501559856446}
   m_Layer: 0
   m_Name: Installers
   m_TagString: Untagged
@@ -156,6 +157,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoreProjectInstaller
   _uiController: {fileID: 4781938049343625892}
+--- !u!114 &2066479501559856446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2991723508171828835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11aed4f01b6cd074082a3e16e1363455, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Gameplay::Gameplay.Bootstrap.GameplayProjectInstaller
 --- !u!1 &8649493612045760305
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,10 +256,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -286,6 +299,7 @@ MonoBehaviour:
   _views:
   - {fileID: 6440527919206723058, guid: 5b70869054669964bac98384b3eb104e, type: 3}
   - {fileID: 4284756750556310005, guid: d4793bcc14f3f4b419c415252d78c37c, type: 3}
+  - {fileID: 6085202794102108646, guid: efa8b98318cd0ec4cbfc5aaa25c533bb, type: 3}
 --- !u!1 &8993499463509565719
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,6 +350,7 @@ MonoBehaviour:
   _scriptableObjectInstallers: []
   _monoInstallers:
   - {fileID: 733126402583425564}
+  - {fileID: 2066479501559856446}
   _installerPrefabs: []
   _parentNewObjectsUnderContext: 1
   _editorReflectionBakingCoverageMode: 0

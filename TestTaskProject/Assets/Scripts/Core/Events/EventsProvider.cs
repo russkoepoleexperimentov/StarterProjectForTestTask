@@ -10,6 +10,16 @@ public static class EventsProvider
         }
     }
 
+    public class CloseScreenEvent
+    {
+        public readonly string ScreenId;
+
+        public CloseScreenEvent(string screenId)
+        {
+            ScreenId = screenId;
+        }
+    }
+
     public struct StartLoadingEvent
     {
         public readonly ILoadingOperation Operation;
@@ -18,5 +28,9 @@ public static class EventsProvider
         {
             Operation = operation;
         }
+    }
+
+    public struct LoadingFinishedEvent
+    {
     }
 }

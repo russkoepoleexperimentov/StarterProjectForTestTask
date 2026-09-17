@@ -1,14 +1,19 @@
+using Gameplay.Car.Presenter;
+using Gameplay.Car.Services;
+using Gameplay.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Gameplay.Car.View
 {
-    public class CarUIView : MonoBehaviour 
+    public class CarUIView : ScreenView
     {
+        [Header("Drive UI")]
         [SerializeField] private TMP_Text _gearText;
-        [SerializeField] private TMP_Text _speedText;
-        [SerializeField] private TMP_Text _rpmText;
+        [SerializeField] private NeedleView _speedNeedle;
+        [SerializeField] private NeedleView _rpmNeedle;
         [SerializeField] private CanvasGroup _canvasGroup;
 
         [Header("Input indicators")]
@@ -16,6 +21,13 @@ namespace Gameplay.Car.View
         [SerializeField] private Slider _brakeSlider;
         [SerializeField] private Slider _steerSlider;
         [SerializeField] private Slider _clutchSlider;
+
+        [Inject] private PlayerCarRegistry _registry;
+
+        public override ScreenController Construct(EventManager eventManager)
+        {
+            return new CarUIScreenController(this, eventManager, _registry);
+        }
 
         private void Awake()
         {
@@ -35,15 +47,9 @@ namespace Gameplay.Car.View
             _gearText.text = gear;
         }
 
-        public void SetSpeed(int speedKph)
-        {
-            _speedText.text = $"kph: {speedKph}";
-        }
+        public void SetSpeed(int speedKph) => _speedNeedle.DisplayValue(speedKph);
 
-        public void SetRpm(int rpm)
-        {
-            _rpmText.text = $"rpm: {rpm}";
-        }
+        public void SetRpm(int rpm) => _rpmNeedle.DisplayValue(rpm);
 
         public void SetInput(float throttle, float brake, float steering, float clutchEngagement)
         {

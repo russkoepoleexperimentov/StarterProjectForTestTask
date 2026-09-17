@@ -1,15 +1,14 @@
 using System;
 using System.Collections;
+using Core.Visual.UI;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
-using TMPro;
 
 public class LoadingView : ScreenView
 {
     [SerializeField] private CanvasGroup _canvasGroup;
-    [SerializeField] private TMP_Text _descriptionText;
-    [SerializeField] private Image _fillImage;
+    [SerializeField] private TextValueDisplayView _descriptionDisplay;
+    [SerializeField] private FloatDisplayView _progressDisplay;
     [SerializeField] private float _fillTime = 0.5f;
     [SerializeField] private float _fadeTime = 1f;
 
@@ -23,10 +22,7 @@ public class LoadingView : ScreenView
         return new LoadingScreenController(this, eventManager, _state);
     }
 
-    public void SetDescription(string description)
-    {
-        _descriptionText.text = description;
-    }
+    public void SetDescription(string description) => _descriptionDisplay.DisplayValue(description);
 
     public void SetProgress(float progress)
     {
@@ -34,7 +30,7 @@ public class LoadingView : ScreenView
 
         if (Mathf.Approximately(progress, 0))
         {
-            _fillImage.fillAmount = 0;
+            _progressDisplay.DisplayValue(0);
             return;
         }
 
@@ -77,15 +73,15 @@ public class LoadingView : ScreenView
 
     private IEnumerator AdjustFillAmount(float desired)
     {
-        var start = _fillImage.fillAmount;
+        var start = _progressDisplay.Displayed;
 
         for (float t = 0; t <= 1; t += Time.unscaledDeltaTime / _fillTime)
         {
-            _fillImage.fillAmount = Mathf.Lerp(start, desired, t);
+            _progressDisplay.DisplayValue(Mathf.Lerp(start, desired, t) * 100f);
             yield return null;
         }
 
-        _fillImage.fillAmount = desired;
+        _progressDisplay.DisplayValue(desired * 100f);
         _fillRoutine = null;
     }
 
@@ -94,13 +90,13 @@ public class LoadingView : ScreenView
         while (_fillRoutine != null)
             yield return null;
 
-        while (!Mathf.Approximately(_fillImage.fillAmount, 1))
+        while (!Mathf.Approximately(_progressDisplay.Displayed, 100))
         {
-            _fillImage.fillAmount = Mathf.MoveTowards(_fillImage.fillAmount, 1, Time.unscaledDeltaTime / _fillTime);
+            _progressDisplay.DisplayValue(Mathf.MoveTowards(_progressDisplay.Displayed, 100, Time.unscaledDeltaTime / _fillTime));
             yield return null;
         }
 
-        _fillImage.fillAmount = 1;
+        _progressDisplay.DisplayValue(100f);
 
         for (float t = 0; t <= 1; t += Time.unscaledDeltaTime / _fadeTime)
         {

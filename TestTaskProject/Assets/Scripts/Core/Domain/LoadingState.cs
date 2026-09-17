@@ -6,6 +6,7 @@ public class LoadingState
     public float Progress { get; private set; }
     public string Description { get; private set; } = string.Empty;
     public bool IsCompleted { get; private set; }
+    public bool IsRunning { get; private set; }
     public Task PresentationCompleted => _presentationCompletion.Task;
 
     public event Action Changed;
@@ -14,6 +15,7 @@ public class LoadingState
 
     public void Reset()
     {
+        IsRunning = true;
         Progress = 0;
         Description = string.Empty;
         IsCompleted = false;
@@ -45,6 +47,11 @@ public class LoadingState
 
         IsCompleted = true;
         Changed?.Invoke();
+    }
+
+    public void FinishRunning()
+    {
+        IsRunning = false;
     }
 
     public void CompletePresentation()

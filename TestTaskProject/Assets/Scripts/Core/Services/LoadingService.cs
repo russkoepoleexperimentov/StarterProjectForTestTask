@@ -7,7 +7,6 @@ using static EventsProvider;
 public class LoadingService
 {
     private readonly EventManager _eventManager;
-    private readonly UIController _uiController;
     private readonly LoadingState _state;
     private readonly Queue<ILoadingOperation> _loadingOperations = new();
 
@@ -16,10 +15,9 @@ public class LoadingService
     private const int PRESENTATION_TIMEOUT_MS = 10000;
     private const string LOADING_SCREEN_ID = "LoadingScreen";
 
-    public LoadingService(EventManager eventManager, UIController controller, LoadingState state)
+    public LoadingService(EventManager eventManager, LoadingState state)
     {
         _eventManager = eventManager;
-        _uiController = controller;
         _state = state;
         _eventManager.Subscribe<StartLoadingEvent>(HandleStartLoading);
     }
@@ -54,18 +52,25 @@ public class LoadingService
             _state.Complete();
             await WaitForPresentation();
 
-            _uiController.Clear();
+            CloseLoadingScreen();
         }
         catch (Exception exception)
         {
             Debug.LogException(exception);
             _loadingOperations.Clear();
-            _uiController.Clear();
+            CloseLoadingScreen();
         }
         finally
         {
             _active = false;
+            _state.FinishRunning();
+            _eventManager.Publish(new LoadingFinishedEvent());
         }
+    }
+
+    private void CloseLoadingScreen()
+    {
+        _eventManager.Publish(new CloseScreenEvent(LOADING_SCREEN_ID));
     }
 
     private async Task WaitForPresentation()

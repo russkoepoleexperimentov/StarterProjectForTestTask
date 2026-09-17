@@ -1,4 +1,5 @@
 using Gameplay.Car.Services;
+using Gameplay.SaveLoad;
 using Zenject;
 
 namespace Gameplay.Bootstrap
@@ -10,6 +11,7 @@ namespace Gameplay.Bootstrap
             // реестр живёт в project-контексте: HUD инстанцируется UIController'ом
             // из project-контейнера, а машины регистрируются из scene-контейнеров
             Container.Bind<PlayerCarRegistry>().AsSingle();
+            Container.Bind<GameSaveService>().AsSingle();
         }
     }
 }

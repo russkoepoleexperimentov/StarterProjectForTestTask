@@ -1,48 +1,28 @@
 using static EventsProvider;
-using UnityEngine;
-using Zenject;
 
 namespace Gameplay.Bootstrap
 {
-    public class HudProvider : MonoBehaviour
+    public class HudProvider : ScreenProvider
     {
-        private const string HUD_SCREEN_ID = "HUD";
+        public const string HUD_SCREEN_ID = "HUD";
 
-        private EventManager _eventManager;
-        private LoadingState _loadingState;
+        protected override string ScreenId => HUD_SCREEN_ID;
 
-        [Inject]
-        private void Setup(EventManager eventManager, LoadingState loadingState)
+        protected override void Start()
         {
-            _eventManager = eventManager;
-            _loadingState = loadingState;
+            base.Start();
+
+            EventManager.Subscribe<ResumeGameEvent>(HandleResume);
         }
 
-        private void Start()
+        protected override void OnDestroy()
         {
-            // сцена активируется до того, как загрузочный экран доиграет завершение,
-            // поэтому HUD открываем только после того, как он освободит UIController
-            if (_loadingState.IsRunning)
-            {
-                _eventManager.Subscribe<LoadingFinishedEvent>(HandleLoadingFinished);
-                return;
-            }
+            if (EventManager != null)
+                EventManager.Unsubscribe<ResumeGameEvent>(HandleResume);
 
-            OpenHud();
+            base.OnDestroy();
         }
 
-        private void OnDestroy()
-        {
-            if (_eventManager != null)
-                _eventManager.Unsubscribe<LoadingFinishedEvent>(HandleLoadingFinished);
-        }
-
-        private void HandleLoadingFinished(LoadingFinishedEvent finishedEvent)
-        {
-            _eventManager.Unsubscribe<LoadingFinishedEvent>(HandleLoadingFinished);
-            OpenHud();
-        }
-
-        private void OpenHud() => _eventManager.Publish(new OpenScreenEvent(HUD_SCREEN_ID));
+        private void HandleResume(ResumeGameEvent resumeEvent) => OpenScreen();
     }
 }

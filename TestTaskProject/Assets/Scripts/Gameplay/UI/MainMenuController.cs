@@ -1,3 +1,4 @@
+using Gameplay.SaveLoad;
 using static EventsProvider;
 
 namespace Gameplay.UI
@@ -5,10 +6,13 @@ namespace Gameplay.UI
     public class MainMenuController : ScreenController
     {
         private readonly MainMenuView _menuView;
+        private readonly GameSaveService _saveService;
 
-        public MainMenuController(MainMenuView view, EventManager eventManager) : base(view, eventManager)
+        public MainMenuController(MainMenuView view, EventManager eventManager, GameSaveService saveService)
+            : base(view, eventManager)
         {
             _menuView = view;
+            _saveService = saveService;
         }
 
         public override void Open()
@@ -16,7 +20,12 @@ namespace Gameplay.UI
             base.Open();
 
             foreach (var button in _menuView.LoadSceneButtons)
+            {
                 button.Clicked += HandleLoadSceneClicked;
+
+                if (button.ContinuesFromSave)
+                    button.SetInteractable(_saveService.HasSave);
+            }
         }
 
         public override void Dispose()
@@ -29,6 +38,8 @@ namespace Gameplay.UI
 
         private void HandleLoadSceneClicked(LoadSceneButton button)
         {
+            _saveService.ContinueRequested = button.ContinuesFromSave;
+
             _eventManager.Publish(new StartLoadingEvent(
                 new SceneLoadingOperation(button.SceneName, button.LoadingDescription)));
         }

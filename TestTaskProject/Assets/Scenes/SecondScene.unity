@@ -37091,6 +37091,8 @@ GameObject:
   - component: {fileID: 351774380}
   - component: {fileID: 351774379}
   - component: {fileID: 351774382}
+  - component: {fileID: 351774384}
+  - component: {fileID: 351774383}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -37169,6 +37171,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7f3433a96e9fe24c822ea449e729a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::CarUIInstaller
+--- !u!114 &351774383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351774378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86a737703e8f3554283a4bbbd836d7a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Gameplay::Gameplay.SaveLoad.GameSaveProvider
+  _menuSceneName: FirstScene
+  _exitDescription: "\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435..."
+--- !u!114 &351774384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351774378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc6c783a934e86c438f3169e17d0fbc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Gameplay::Gameplay.Bootstrap.PauseProvider
 --- !u!1001 &351860176
 PrefabInstance:
   m_ObjectHideFlags: 0

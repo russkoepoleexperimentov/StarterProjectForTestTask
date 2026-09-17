@@ -26,6 +26,9 @@ namespace Gameplay.Car.View
         [SerializeField] private Axle[] _axles;
         [SerializeField] private Transform _centerOfMass;
 
+        public Vector3 Position => _rigidbody.position;
+        public Quaternion Rotation => _rigidbody.rotation;
+
         public float SpeedKph => Vector3.Dot(_rigidbody.linearVelocity, _rigidbody.transform.forward) * MPS_TO_KPH;
 
         public IReadOnlyCollection<Axle> Axles => _axles;
@@ -47,6 +50,15 @@ namespace Gameplay.Car.View
         }
 
         private const float MPS_TO_KPH = 3.6f;
+
+        public void Teleport(Vector3 position, Quaternion rotation)
+        {
+            _rigidbody.linearVelocity = Vector3.zero;
+            _rigidbody.angularVelocity = Vector3.zero;
+            _rigidbody.position = position;
+            _rigidbody.rotation = rotation;
+            transform.SetPositionAndRotation(position, rotation);
+        }
 
         private void Start()
         {

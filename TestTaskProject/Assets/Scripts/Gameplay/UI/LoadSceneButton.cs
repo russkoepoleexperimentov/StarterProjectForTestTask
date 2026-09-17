@@ -9,27 +9,29 @@ namespace Gameplay.UI
     {
         public string SceneName => _sceneName;
         public string LoadingDescription => _loadingDescription;
+        public bool ContinuesFromSave => _continuesFromSave;
 
         public event Action<LoadSceneButton> Clicked;
 
         [SerializeField] private string _sceneName;
         [SerializeField] private string _loadingDescription;
+        [Tooltip("Кнопка 'Продолжить': загружает сцену и применяет сохранение")]
+        [SerializeField] private bool _continuesFromSave;
 
         private Button _button;
 
-        private void Awake()
-        {
-            _button = GetComponent<Button>();
-        }
+        private Button Button => _button ??= GetComponent<Button>();
+
+        public void SetInteractable(bool interactable) => Button.interactable = interactable;
 
         private void OnEnable()
         {
-            _button.onClick.AddListener(HandleClick);
+            Button.onClick.AddListener(HandleClick);
         }
 
         private void OnDisable()
         {
-            _button.onClick.RemoveListener(HandleClick);
+            Button.onClick.RemoveListener(HandleClick);
         }
 
         private void HandleClick() => Clicked?.Invoke(this);

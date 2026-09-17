@@ -12,7 +12,11 @@ namespace Gameplay.Car.Input
         }
 
         private void OnDestroy() {
-            _input?.Dispose();
+            if (_input == null) return;
+
+            _input.Disable();
+            _input.Dispose();
+            _input = null;
         }
 
         public DrivetrainInputModel Read() {

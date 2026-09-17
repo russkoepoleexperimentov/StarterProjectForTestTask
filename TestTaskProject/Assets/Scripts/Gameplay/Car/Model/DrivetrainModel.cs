@@ -9,7 +9,6 @@ namespace Gameplay.Car.Model
     public class DrivetrainModel
     {
         private readonly EngineConfig _engineConfig;
-        private readonly GearboxUsageConfig _gearboxUsageConfig;
         private readonly CarSystemsConfig _carSystemsConfig;
         private readonly GearboxModel _gearbox;
         private readonly EngineTorqueCurve _torqueCurve;
@@ -23,7 +22,6 @@ namespace Gameplay.Car.Model
 
         public DrivetrainModel(
             EngineConfig engineConfig,
-            GearboxUsageConfig gearboxUsageConfig,
             CarSystemsConfig carSystemsConfig,
             GearboxModel gearbox,
             EngineTorqueCurve torqueCurve,
@@ -31,7 +29,6 @@ namespace Gameplay.Car.Model
             )
         {
             _engineConfig = engineConfig;
-            _gearboxUsageConfig = gearboxUsageConfig;
             _carSystemsConfig = carSystemsConfig;
             _gearbox = gearbox;
             _torqueCurve = torqueCurve;

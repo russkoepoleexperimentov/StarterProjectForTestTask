@@ -7,21 +7,24 @@ namespace Gameplay.Car.Input
     public class CarInputFilter
     {
         private readonly EngineConfig _engineConfig;
-        private readonly CarSystemsConfig _carSystemsConfig;
+        private readonly DriverConfig _driverConfig;
 
         private float _brake;
         private float _steering;
         private bool _passiveBraking; // механика пассивного торможения
 
-        public CarInputFilter(EngineConfig engineConfig, CarSystemsConfig carSystemsConfig)
+        public CarInputFilter(EngineConfig engineConfig, DriverConfig driverConfig)
         {
             _engineConfig = engineConfig;
-            _carSystemsConfig = carSystemsConfig;
+            _driverConfig = driverConfig;
         }
 
         public float FilterThrottle(DrivetrainInputModel raw, int gear, float engineRpm)
         {
+            // разворот педалей на задней передаче - не ассист, а трактовка ввода: остаётся всегда
             var throttle = SelectThrottlePedal(raw, gear);
+
+            if (!_driverConfig.EnableThrottleAssist) return throttle;
 
             // чтобы при игре с клавиатуры лучше контроллировать разгон
             var correction = 1 - Mathf.InverseLerp(_engineConfig.MaxTorqueRPM, _engineConfig.RedlineRPM, engineRpm);
@@ -33,9 +36,15 @@ namespace Gameplay.Car.Input
         {
             var pedal = SelectBrakePedal(raw, gear);
 
+            if (!_driverConfig.EnableBrakeAssist)
+            {
+                _brake = pedal;
+                return _brake;
+            }
+
             var rate = pedal > _brake
-                ? _carSystemsConfig.BrakeRiseRate
-                : _carSystemsConfig.BrakeFallRate;
+                ? _driverConfig.BrakeRiseRate
+                : _driverConfig.BrakeFallRate;
 
             _brake = Mathf.MoveTowards(_brake, pedal, deltaTime * rate);
 
@@ -44,27 +53,39 @@ namespace Gameplay.Car.Input
 
         public float ApplyPassiveBraking(float brakePedal, float throttle, int gear)
         {
-            if (brakePedal > _carSystemsConfig.PedalThreshold) _passiveBraking = true;
-            if (throttle > _carSystemsConfig.PedalThreshold) _passiveBraking = false;
+            if (!_driverConfig.EnablePassiveBraking)
+            {
+                _passiveBraking = false;
+                return brakePedal;
+            }
+
+            if (brakePedal > _driverConfig.PedalThreshold) _passiveBraking = true;
+            if (throttle > _driverConfig.PedalThreshold) _passiveBraking = false;
             if (gear == 0) _passiveBraking = false;
 
-            var passiveBrakingInput = _passiveBraking ? _carSystemsConfig.PassiveBrakeAmount : 0;
+            var passiveBrakingInput = _passiveBraking ? _driverConfig.PassiveBrakeAmount : 0;
 
             return Mathf.Max(passiveBrakingInput, brakePedal);
         }
 
         public float FilterSteering(float rawSteering, bool handbrake, float speedKph, float deltaTime)
         {
+            if (!_driverConfig.EnableSteeringAssist)
+            {
+                _steering = rawSteering;
+                return _steering;
+            }
+
             var speedSteerFactor = Mathf.Max(
-                1f - Mathf.Clamp01(speedKph / _carSystemsConfig.SteerSpeedFalloffKph),
-                _carSystemsConfig.MinSteerFactor);
+                1f - Mathf.Clamp01(speedKph / _driverConfig.SteerSpeedFalloffKph),
+                _driverConfig.MinSteerFactor);
 
             var desiredSteerInput = !handbrake ? speedSteerFactor * rawSteering : rawSteering;
 
             // доворачиваем руль медленнее, чем возвращаем
             var rate = Mathf.Abs(_steering) < Mathf.Abs(desiredSteerInput)
-                ? _carSystemsConfig.SteerAttackRate
-                : _carSystemsConfig.SteerReleaseRate;
+                ? _driverConfig.SteerAttackRate
+                : _driverConfig.SteerReleaseRate;
 
             _steering = Mathf.MoveTowards(_steering, desiredSteerInput, deltaTime * rate);
 

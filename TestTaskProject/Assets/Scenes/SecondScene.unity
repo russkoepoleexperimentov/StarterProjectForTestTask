@@ -62540,6 +62540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f803507742a481c4daaf3e1324084dd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::UserInputView
+  _driverConfig: {fileID: 11400000, guid: ad910aadeec56bf41b92f2cfedae3217, type: 2}
 --- !u!114 &617614352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62569,7 +62570,6 @@ MonoBehaviour:
   _input: {fileID: 617614351}
   _engineConfig: {fileID: 11400000, guid: f1092e008d5549c429a5fe227b280e18, type: 2}
   _gearboxConfig: {fileID: 11400000, guid: c0511bb487269a24494634e8b7b108d3, type: 2}
-  _gearboxUsageConfig: {fileID: 11400000, guid: ad910aadeec56bf41b92f2cfedae3217, type: 2}
   _carSystemsConfig: {fileID: 11400000, guid: 05ec291bb0b11854a8f3f6843ee352cd, type: 2}
   _wheelEffectsConfig: {fileID: 11400000, guid: d4633ca5fe7ea96478fea28a44422b92, type: 2}
   _isPlayerCar: 1
@@ -67610,7 +67610,6 @@ MonoBehaviour:
   _input: {fileID: 658395893}
   _engineConfig: {fileID: 11400000, guid: 4f4fb4c29897b9a4bb8b89d1939c1d53, type: 2}
   _gearboxConfig: {fileID: 11400000, guid: 02e97e3b2d316ee4ba64976ac658662c, type: 2}
-  _gearboxUsageConfig: {fileID: 11400000, guid: 221b903b01a9e184caf006855709e9c1, type: 2}
   _carSystemsConfig: {fileID: 11400000, guid: 2be59404f7490904eb6306051bf9edf7, type: 2}
   _wheelEffectsConfig: {fileID: 11400000, guid: d4633ca5fe7ea96478fea28a44422b92, type: 2}
   _isPlayerCar: 1
@@ -67698,6 +67697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f803507742a481c4daaf3e1324084dd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Gameplay::UserInputView
+  _driverConfig: {fileID: 11400000, guid: 221b903b01a9e184caf006855709e9c1, type: 2}
 --- !u!114 &658395894
 MonoBehaviour:
   m_ObjectHideFlags: 0

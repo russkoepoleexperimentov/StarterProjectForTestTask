@@ -13,11 +13,10 @@ namespace Gameplay.Car
     {
         [SerializeField] private CarView _carView;
         [SerializeField] private CarAudioView _carAudioView;
-        [SerializeField] private UserInputView _input;
+        [SerializeField] private CarInputHandler _input;
 
         [SerializeField] private EngineConfig _engineConfig;
         [SerializeField] private GearboxConfig _gearboxConfig;
-        [SerializeField] private GearboxUsageConfig _gearboxUsageConfig;
         [SerializeField] private CarSystemsConfig _carSystemsConfig;
         [SerializeField] private CarWheelEffectsConfig _wheelEffectsConfig;
 
@@ -27,19 +26,16 @@ namespace Gameplay.Car
         {
             Container.Bind<EngineConfig>().FromInstance(_engineConfig).AsSingle();
             Container.Bind<GearboxConfig>().FromInstance(_gearboxConfig).AsSingle();
-            Container.Bind<GearboxUsageConfig>().FromInstance(_gearboxUsageConfig).AsSingle();
             Container.Bind<CarSystemsConfig>().FromInstance(_carSystemsConfig).AsSingle();
             Container.Bind<CarView>().FromInstance(_carView).AsSingle();
 
+            // DriverConfig и стек ассистентов живут на самом обработчике: у ИИ они свои
             Container.Bind<IInputSource>().FromInstance(_input).AsSingle();
 
             Container.Bind<EngineTorqueCurve>().AsSingle();
             Container.Bind<GearboxModel>().AsSingle();
             Container.Bind<DrivetrainModel>().AsSingle();
 
-            Container.Bind<CarInputFilter>().AsSingle();
-            Container.Bind<AutoGearboxAssist>().AsSingle();
-            Container.Bind<CarInputProcessor>().AsSingle();
             Container.Bind<CarStateModel>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<CarAudioPresenter>().AsSingle();

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb4acf7184445b64a9b6939587332783, type: 3}
   m_Name: LadaGearbox
-  m_EditorClassIdentifier: Gameplay::GearboxConfig
+  m_EditorClassIdentifier: Gameplay::Gameplay.Car.Configs.GearboxConfig
   <BackwardGearRatios>k__BackingField:
   - -3.5
   <ForwardGearRatios>k__BackingField:
@@ -21,3 +21,5 @@ MonoBehaviour:
   - 0.941
   - 0.784
   <FinalDriveRatio>k__BackingField: 3.7
+  <ShiftTimeSeconds>k__BackingField: 0.3
+  <MinTimeInGearSeconds>k__BackingField: 0.3

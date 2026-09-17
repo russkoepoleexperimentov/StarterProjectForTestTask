@@ -1,4 +1,5 @@
-﻿using Gameplay.Car.Model;
+﻿using Gameplay.Car.Configs;
+using Gameplay.Car.Model;
 using Gameplay.Car.View;
 using UnityEngine;
 using Zenject;

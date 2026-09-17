@@ -13,12 +13,6 @@ namespace Gameplay.Car.Model
         public float ClutchPedal { get; }
         public bool ThrottleCut { get; }
 
-        // сырой ввод: ни фильтрации, ни коробки
-        public DrivetrainInputModel(float throttlePedal, float brakePedal, float steering, float clutchPedal, float handbrake)
-            : this(throttlePedal, brakePedal, steering, handbrake, clutchPedal, false)
-        {
-        }
-
         public DrivetrainInputModel(float throttlePedal, float brakePedal, float steering, float handbrake,
             float clutchPedal, bool throttleCut)
         {
@@ -29,5 +23,15 @@ namespace Gameplay.Car.Model
             ClutchPedal = clutchPedal;
             ThrottleCut = throttleCut;
         }
+
+        /// <summary>
+        /// Сырые намерения водителя: ни фильтрации, ни коробки. Это то, что возвращает
+        /// <c>CarInputHandler.ReadRaw()</c> - и у игрока, и у ИИ.
+        /// </summary>
+        public static DrivetrainInputModel Raw(float throttlePedal, float brakePedal, float steering,
+            float clutchPedal, float handbrake)
+            => new(throttlePedal, brakePedal, steering, handbrake, clutchPedal, false);
+
+        public static DrivetrainInputModel Idle => Raw(0f, 0f, 0f, 0f, 0f);
     }
 }

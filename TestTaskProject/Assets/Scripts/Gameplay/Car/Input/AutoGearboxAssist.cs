@@ -9,8 +9,7 @@ namespace Gameplay.Car.Input
     public class AutoGearboxAssist
     {
         private readonly GearboxModel _gearbox;
-        private readonly GearboxUsageConfig _gearboxUsageConfig;
-        private readonly CarSystemsConfig _carSystemsConfig;
+        private readonly DriverConfig _driverConfig;
         private readonly EngineConfig _engineConfig;
         private readonly EngineTorqueCurve _torqueCurve;
 
@@ -22,14 +21,12 @@ namespace Gameplay.Car.Input
 
         public AutoGearboxAssist(
             GearboxModel gearbox,
-            GearboxUsageConfig gearboxUsageConfig,
-            CarSystemsConfig carSystemsConfig,
+            DriverConfig driverConfig,
             EngineConfig engineConfig,
             EngineTorqueCurve torqueCurve)
         {
             _gearbox = gearbox;
-            _gearboxUsageConfig = gearboxUsageConfig;
-            _carSystemsConfig = carSystemsConfig;
+            _driverConfig = driverConfig;
             _engineConfig = engineConfig;
             _torqueCurve = torqueCurve;
         }
@@ -37,9 +34,11 @@ namespace Gameplay.Car.Input
         public void UpdateGear(float forwardInput, float backwardInput, float speedKph,
             float torque, float engineRpm, float deltaTime)
         {
-            if (_gearbox.Tick(deltaTime)) return;
+            // таймеры коробки тикают в любом случае, иначе IsShifting залипнет навсегда.
+            // с выключенным ассистом передачу дёргает сам водитель через GearboxModel.Try*()
+            if (_gearbox.Tick(deltaTime) || !_driverConfig.EnableAutoGearbox) return;
 
-            var threshold = _carSystemsConfig.PedalThreshold;
+            var threshold = _driverConfig.PedalThreshold;
             var isIdleInput = forwardInput < threshold && backwardInput < threshold;
             var isStanding = Mathf.Abs(speedKph) < STANDSTILL_SPEED_KPH;
 
@@ -60,8 +59,8 @@ namespace Gameplay.Car.Input
             var throttleInput = speedKph > 0 ? forwardInput : backwardInput;
             var torqueAtIdle = _torqueCurve.Evaluate(_engineConfig.IdleRPM);
 
-            var shouldShiftDown = torque < torqueAtIdle && engineRpm < _gearboxUsageConfig.ShiftDownRPM;
-            var shouldShiftUp = throttleInput > 0 && engineRpm > _gearboxUsageConfig.ShiftUpRPM;
+            var shouldShiftDown = torque < torqueAtIdle && engineRpm < _driverConfig.ShiftDownRPM;
+            var shouldShiftUp = throttleInput > 0 && engineRpm > _driverConfig.ShiftUpRPM;
 
             if (shouldShiftDown)
             {
@@ -78,11 +77,19 @@ namespace Gameplay.Car.Input
         public float UpdateClutch(float speedKph, bool isShifting, float throttle, float clutchInput, float driveWheelsRpm,
             bool handbrake, float deltaTime)
         {
+            if (!_driverConfig.EnableClutchAssist)
+            {
+                // сцеплением работает сам водитель: отдаём его педаль как есть
+                _clutchEngagement = 0f;
+                _clutchTimeRamp = 0f;
+                return Mathf.Clamp01(clutchInput);
+            }
+
             // анти-заглушание: без газа, когда колёса крутят вал сцепления медленнее холостых,
             // двигатель не должен тащить машину - иначе удержание холостых толкает её с бесконечным моментом.
             // смотрим на вал, а не на двигатель: выжатый двигатель всегда на холостых и сцепление бы не вернулось
             var clutchShaftRpm = Mathf.Abs(driveWheelsRpm * _gearbox.CurrentRatio);
-            var isIdleStall = throttle < _carSystemsConfig.PedalThreshold
+            var isIdleStall = throttle < _driverConfig.PedalThreshold
                               && clutchShaftRpm < _engineConfig.IdleRPM + ANTI_STALL_RPM_MARGIN;
 
             // ручник выжимает сцепление, чтобы не бороться с двигателем
@@ -93,17 +100,17 @@ namespace Gameplay.Car.Input
                 return 1;
             }
 
-            var engageSpeed = _gearboxUsageConfig.ClutchEngageTimeSeconds > 0f
-                ? deltaTime / _gearboxUsageConfig.ClutchEngageTimeSeconds
+            var engageSpeed = _driverConfig.ClutchEngageTimeSeconds > 0f
+                ? deltaTime / _driverConfig.ClutchEngageTimeSeconds
                 : 1f;
 
             var target = 1f;
 
             // трогание с места: сцепление держим подбуксовывающим, пока машина не разогналась
-            if (Mathf.Abs(_gearbox.CurrentGear) == 1 && _gearboxUsageConfig.ClutchLockSpeedKph > 0f)
+            if (Mathf.Abs(_gearbox.CurrentGear) == 1 && _driverConfig.ClutchLockSpeedKph > 0f)
             {
-                var speedFactor = Mathf.Clamp01(Mathf.Abs(speedKph) / _gearboxUsageConfig.ClutchLockSpeedKph);
-                target = Mathf.Lerp(_gearboxUsageConfig.MinClutchEngagement, 1f, speedFactor);
+                var speedFactor = Mathf.Clamp01(Mathf.Abs(speedKph) / _driverConfig.ClutchLockSpeedKph);
+                target = Mathf.Lerp(_driverConfig.MinClutchEngagement, 1f, speedFactor);
             }
 
             target = Mathf.Min(target, 1 - clutchInput);

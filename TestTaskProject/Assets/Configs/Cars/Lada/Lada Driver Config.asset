@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c02cdcce7994be19d34d881d2afb6e1, type: 3}
+  m_Name: Lada Driver Config
+  m_EditorClassIdentifier: Gameplay::Gameplay.Car.Configs.DriverConfig
+  <EnableAutoGearbox>k__BackingField: 1
+  <ShiftDownRPM>k__BackingField: 1000
+  <ShiftUpRPM>k__BackingField: 4000
+  <EnableClutchAssist>k__BackingField: 1
+  <ClutchEngageTimeSeconds>k__BackingField: 0.3
+  <ClutchLockSpeedKph>k__BackingField: 10
+  <MinClutchEngagement>k__BackingField: 0.15
+  <EnableThrottleAssist>k__BackingField: 1
+  <EnableSteeringAssist>k__BackingField: 1
+  <SteerSpeedFalloffKph>k__BackingField: 100
+  <MinSteerFactor>k__BackingField: 0.3
+  <SteerAttackRate>k__BackingField: 3
+  <SteerReleaseRate>k__BackingField: 6
+  <EnableBrakeAssist>k__BackingField: 1
+  <BrakeRiseRate>k__BackingField: 4
+  <BrakeFallRate>k__BackingField: 6
+  <EnablePassiveBraking>k__BackingField: 1
+  <PassiveBrakeAmount>k__BackingField: 0.2
+  <PedalThreshold>k__BackingField: 0.2

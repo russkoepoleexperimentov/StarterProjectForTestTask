@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9c02cdcce7994be19d34d881d2afb6e1, type: 3}
-  m_Name: Gearbox Usage Config
-  m_EditorClassIdentifier: Gameplay::Gameplay.Car.Configs.GearboxUsageConfig
-  <ShiftTimeSeconds>k__BackingField: 0.3
-  <MinTimeInGearSeconds>k__BackingField: 1
+  m_Name: Driver Config
+  m_EditorClassIdentifier: Gameplay::Gameplay.Car.Configs.DriverConfig
   <ShiftDownRPM>k__BackingField: 1000
   <ShiftUpRPM>k__BackingField: 2500
   <ClutchEngageTimeSeconds>k__BackingField: 1.2
   <ClutchLockSpeedKph>k__BackingField: 15
   <MinClutchEngagement>k__BackingField: 0.15
-  <MaxLaunchTorqueNm>k__BackingField: 2500
+  <EnableAutoGearbox>k__BackingField: 1
+  <EnableClutchAssist>k__BackingField: 1
+  <EnableThrottleAssist>k__BackingField: 1
+  <EnableSteeringAssist>k__BackingField: 1
+  <EnableBrakeAssist>k__BackingField: 1
+  <EnablePassiveBraking>k__BackingField: 1

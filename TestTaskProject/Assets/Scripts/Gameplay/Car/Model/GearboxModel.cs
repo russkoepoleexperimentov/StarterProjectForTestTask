@@ -9,7 +9,6 @@ namespace Gameplay.Car.Model
     public class GearboxModel
     {
         private readonly GearboxConfig _gearboxConfig;
-        private readonly GearboxUsageConfig _gearboxUsageConfig;
 
         private float _shiftTimer;
         private float _gearHoldTimer;
@@ -23,10 +22,9 @@ namespace Gameplay.Car.Model
         public int MaxForwardGear => _gearboxConfig.ForwardGearRatios.Length;
         public int MaxReverseGear => _gearboxConfig.BackwardGearRatios.Length;
 
-        public GearboxModel(GearboxConfig gearboxConfig, GearboxUsageConfig gearboxUsageConfig)
+        public GearboxModel(GearboxConfig gearboxConfig)
         {
             _gearboxConfig = gearboxConfig;
-            _gearboxUsageConfig = gearboxUsageConfig;
 
             CurrentGear = 0;
         }
@@ -54,8 +52,8 @@ namespace Gameplay.Car.Model
             if (gear > MaxForwardGear || gear < -MaxReverseGear) return false;
 
             CurrentGear = gear;
-            _shiftTimer = _gearboxUsageConfig.ShiftTimeSeconds;
-            _gearHoldTimer = _gearboxUsageConfig.MinTimeInGearSeconds;
+            _shiftTimer = _gearboxConfig.ShiftTimeSeconds;
+            _gearHoldTimer = _gearboxConfig.MinTimeInGearSeconds;
 
             return true;
         }

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e14321f2119ba5241869376381684c5e, type: 3}
   m_Name: LadaEngine
-  m_EditorClassIdentifier: Gameplay::EngineConfig
+  m_EditorClassIdentifier: Gameplay::Gameplay.Car.Configs.EngineConfig
   <MaxTorqueNm>k__BackingField: 131
   <MaxTorqueRPM>k__BackingField: 3700
   <MaxPowerWatts>k__BackingField: 65000
@@ -20,6 +20,6 @@ MonoBehaviour:
   <RedlineRPM>k__BackingField: 7000
   <IdleTorqueFraction>k__BackingField: 0.35
   <InertiaKgM>k__BackingField: 0.3
-  <BaseFriction>k__BackingField: 25
-  <RPMFriction>k__BackingField: 0.02
+  <BaseFriction>k__BackingField: 13
+  <RPMFriction>k__BackingField: 0.01
   <AudioConfig>k__BackingField: {fileID: 11400000, guid: 023b69facd194dc4e9c9b68ad133753f, type: 2}

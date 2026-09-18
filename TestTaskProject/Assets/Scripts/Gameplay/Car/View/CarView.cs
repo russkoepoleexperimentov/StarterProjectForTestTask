@@ -70,8 +70,6 @@ namespace Gameplay.Car.View
 
         public void ApplyDrive(DrivetrainOutputModel drivetrainOutput) 
         {
-            float fraction = 1f / Mathf.Max(NumDriveWheels, 1);
-
             foreach (Axle axle in _axles)
             {
                 // педаль и ручник не складываются - берём тот, что тормозит сильнее
@@ -90,11 +88,10 @@ namespace Gameplay.Car.View
             }
         }
 
-        public void FetchFeedback(out float averageDriveWheelsRpm, out float impulse, out float driveInertia)
+        public void FetchFeedback(out float averageDriveWheelsRpm, out float driveInertia)
         {
             int numDriveWheels = 0;
             averageDriveWheelsRpm = 0;
-            impulse = 0;
             driveInertia = 0;
             foreach (var axle in _axles)
             {
@@ -102,8 +99,6 @@ namespace Gameplay.Car.View
                 {
                     averageDriveWheelsRpm += axle.LeftWheel.RPM;
                     averageDriveWheelsRpm += axle.RightWheel.RPM;
-                    impulse += axle.LeftWheel.FeedbackImpulse;
-                    impulse += axle.RightWheel.FeedbackImpulse;
                     driveInertia += axle.LeftWheel.Inertia;
                     driveInertia += axle.RightWheel.Inertia;
                     numDriveWheels += 2;

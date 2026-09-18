@@ -1,4 +1,4 @@
-using static EventsProvider;
+﻿using static EventsProvider;
 using Gameplay.Car.Model;
 using Gameplay.Car.Services;
 using UnityEngine;
@@ -52,14 +52,20 @@ namespace Gameplay.SaveLoad
             if (view == null) return;
 
             view.Teleport(data.Position, data.Rotation);
+
+            if (data.HasDamage)
+                _registry.CurrentDamage?.Restore(data.EngineHealth);
         }
 
         private void HandleSaveAndExit(SaveAndExitEvent saveEvent)
         {
             var view = _registry.CurrentView;
 
+            var damage = _registry.CurrentDamage;
+
             if (view != null)
-                _saveService.Save(new CarSaveData(view.Position, view.Rotation));
+                _saveService.Save(new CarSaveData(view.Position, view.Rotation,
+                    damage?.EngineHealth ?? 0f));
             else
                 Debug.LogWarning("Нет машины игрока — сохранять нечего.", this);
 

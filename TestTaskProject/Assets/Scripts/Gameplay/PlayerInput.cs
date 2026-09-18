@@ -118,6 +118,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""StartEngine"",
+                    ""type"": ""Button"",
+                    ""id"": ""cfc3f27b-184b-4ea6-85c9-a8c249809c39"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -197,6 +206,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Clutch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""03d3d855-2c72-469d-beac-9f8661f07490"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StartEngine"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -208,6 +228,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Game_Movement = m_Game.FindAction("Movement", throwIfNotFound: true);
         m_Game_Handbrake = m_Game.FindAction("Handbrake", throwIfNotFound: true);
         m_Game_Clutch = m_Game.FindAction("Clutch", throwIfNotFound: true);
+        m_Game_StartEngine = m_Game.FindAction("StartEngine", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -291,6 +312,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Movement;
     private readonly InputAction m_Game_Handbrake;
     private readonly InputAction m_Game_Clutch;
+    private readonly InputAction m_Game_StartEngine;
     /// <summary>
     /// Provides access to input actions defined in input action map "Game".
     /// </summary>
@@ -314,6 +336,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Game/Clutch".
         /// </summary>
         public InputAction @Clutch => m_Wrapper.m_Game_Clutch;
+        /// <summary>
+        /// Provides access to the underlying input action "Game/StartEngine".
+        /// </summary>
+        public InputAction @StartEngine => m_Wrapper.m_Game_StartEngine;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -349,6 +375,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Clutch.started += instance.OnClutch;
             @Clutch.performed += instance.OnClutch;
             @Clutch.canceled += instance.OnClutch;
+            @StartEngine.started += instance.OnStartEngine;
+            @StartEngine.performed += instance.OnStartEngine;
+            @StartEngine.canceled += instance.OnStartEngine;
         }
 
         /// <summary>
@@ -369,6 +398,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Clutch.started -= instance.OnClutch;
             @Clutch.performed -= instance.OnClutch;
             @Clutch.canceled -= instance.OnClutch;
+            @StartEngine.started -= instance.OnStartEngine;
+            @StartEngine.performed -= instance.OnStartEngine;
+            @StartEngine.canceled -= instance.OnStartEngine;
         }
 
         /// <summary>
@@ -430,5 +462,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnClutch(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "StartEngine" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnStartEngine(InputAction.CallbackContext context);
     }
 }

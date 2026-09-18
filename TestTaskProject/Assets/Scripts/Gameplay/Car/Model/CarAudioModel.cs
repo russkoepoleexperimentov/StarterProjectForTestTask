@@ -85,7 +85,7 @@ namespace Gameplay.Car.Model
                     : 1f;
 
                 volumesOut[i] = _smoothedVolumes[i];
-                activeOut[i] = _smoothedVolumes[i] > VOLUME_THRESHOLD;
+                activeOut[i] = _smoothedVolumes[i] > VOLUME_THRESHOLD && engineRpm > 100;
             }
         }
     }

@@ -10,19 +10,23 @@ namespace Gameplay.Car.View
     {
         private EngineConfig _engineConfig;
         private CarWheelEffectsConfig _wheelEffectsConfig;
+        private CarDamageConfig _damageConfig;
 
         private AudioSource[] _engineSources;
 
         private AudioSource _skidSource;
+        private AudioSource _steamSource;
         private AudioSource _oneShotSource;
 
         private CarView _view;
         
         [Inject]
-        public void Init(EngineConfig engineConfig, CarWheelEffectsConfig wheelEffectsConfig, CarView view)
+        public void Init(EngineConfig engineConfig, CarWheelEffectsConfig wheelEffectsConfig,
+            CarDamageConfig damageConfig, CarView view)
         {
             _engineConfig = engineConfig;
             _wheelEffectsConfig = wheelEffectsConfig;
+            _damageConfig = damageConfig;
 
             var audio = _engineConfig.AudioConfig;
             
@@ -33,6 +37,7 @@ namespace Gameplay.Car.View
             }
 
             _skidSource = CreateAudioSource(_wheelEffectsConfig.SkidmarksClip);
+            _steamSource = CreateAudioSource(_damageConfig.SteamClip);
             _oneShotSource = CreateOneShotAudioSource();
 
             _view = view;
@@ -87,6 +92,33 @@ namespace Gameplay.Car.View
             if (clip == null) return;
 
             _oneShotSource.PlayOneShot(clip);
+        }
+
+        // дым идёт - шипит пар, и тем громче, чем его больше
+        public void ApplySteamSound(bool active, float intensity01)
+        {
+            if (_steamSource.clip == null) return;
+
+            _steamSource.volume = active
+                ? Mathf.Lerp(_damageConfig.SteamMinVolume, _damageConfig.SteamMaxVolume,
+                    Mathf.Clamp01(intensity01))
+                : 0f;
+        }
+
+        public void PlayImpact(bool strong, float volume)
+        {
+            var clips = strong ? _damageConfig.StrongImpactClips : _damageConfig.WeakImpactClips;
+
+            if (clips == null || clips.Length == 0) return;
+
+            PlayOneShot(clips[Random.Range(0, clips.Length)], volume);
+        }
+
+        private void PlayOneShot(AudioClip clip, float volume)
+        {
+            if (clip == null) return;
+
+            _oneShotSource.PlayOneShot(clip, volume);
         }
 
         private AudioSource CreateOneShotAudioSource()

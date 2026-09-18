@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Gameplay.Car.Model;
 using Gameplay.Car.View;
 
@@ -8,15 +8,17 @@ namespace Gameplay.Car.Services
     {
         public CarStateModel Current { get; private set; }
         public CarView CurrentView { get; private set; }
+        public CarDamageModel CurrentDamage { get; private set; }
 
         public event Action<CarStateModel> Changed;
 
-        public void Set(CarStateModel state, CarView view)
+        public void Set(CarStateModel state, CarView view, CarDamageModel damage)
         {
             if (Current == state) return;
 
             Current = state;
             CurrentView = view;
+            CurrentDamage = damage;
             Changed?.Invoke(Current);
         }
 
@@ -26,6 +28,7 @@ namespace Gameplay.Car.Services
 
             Current = null;
             CurrentView = null;
+            CurrentDamage = null;
             Changed?.Invoke(null);
         }
     }

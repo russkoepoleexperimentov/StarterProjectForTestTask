@@ -1,4 +1,4 @@
-using Gameplay.Car.Configs;
+﻿using Gameplay.Car.Configs;
 using Gameplay.Car.Input;
 using Gameplay.Car.Model;
 using Gameplay.Car.Presenter;
@@ -14,11 +14,15 @@ namespace Gameplay.Car
         [SerializeField] private CarView _carView;
         [SerializeField] private CarAudioView _carAudioView;
         [SerializeField] private CarInputHandler _input;
+        [SerializeField] private CarCollisionView _collisionView;
+        [SerializeField] private CarSmokeView _smokeView;
+        [SerializeField] private CarDeformationView _deformationView;
 
         [SerializeField] private EngineConfig _engineConfig;
         [SerializeField] private GearboxConfig _gearboxConfig;
         [SerializeField] private CarSystemsConfig _carSystemsConfig;
         [SerializeField] private CarWheelEffectsConfig _wheelEffectsConfig;
+        [SerializeField] private CarDamageConfig _damageConfig;
 
         [SerializeField] private bool _isPlayerCar = true;
 
@@ -37,6 +41,13 @@ namespace Gameplay.Car
             Container.Bind<DrivetrainModel>().AsSingle();
 
             Container.Bind<CarStateModel>().AsSingle();
+
+            Container.Bind<CarDamageConfig>().FromInstance(_damageConfig).AsSingle();
+            Container.Bind<CarCollisionView>().FromInstance(_collisionView).AsSingle();
+            Container.Bind<CarSmokeView>().FromInstance(_smokeView).AsSingle();
+            Container.Bind<CarDeformationView>().FromInstance(_deformationView).AsSingle();
+            Container.Bind<CarDamageModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CarDamagePresenter>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<CarAudioPresenter>().AsSingle();
             Container.Bind<CarAudioModel>().AsSingle();

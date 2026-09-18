@@ -1,3 +1,4 @@
+﻿using System;
 using Gameplay.Car.Configs;
 using UnityEngine;
 
@@ -13,19 +14,24 @@ namespace Gameplay.Car.Model
         private readonly GearboxModel _gearbox;
         private readonly EngineTorqueCurve _torqueCurve;
         private readonly CarStateModel _stateModel;
+        private readonly CarDamageModel _damageModel;
+        private readonly float _idleThrottle;
 
         private float _engineAngularVelocity;
         private float _velocity;
+        private float _time;
 
         private const float RPM2AngVel = Mathf.PI / 30;
         private const float AngVel2RPM = 1f / RPM2AngVel;
+
 
         public DrivetrainModel(
             EngineConfig engineConfig,
             CarSystemsConfig carSystemsConfig,
             GearboxModel gearbox,
             EngineTorqueCurve torqueCurve,
-            CarStateModel stateModel
+            CarStateModel stateModel,
+            CarDamageModel damageModel
             )
         {
             _engineConfig = engineConfig;
@@ -33,13 +39,15 @@ namespace Gameplay.Car.Model
             _gearbox = gearbox;
             _torqueCurve = torqueCurve;
             _stateModel = stateModel;
+            _damageModel = damageModel;
 
             _engineAngularVelocity = _engineConfig.IdleRPM * RPM2AngVel;
+            _idleThrottle = CalculateIdleThrottle();
         }
 
-        public DrivetrainOutputModel Tick(DrivetrainInputModel input, float averageWheelsRpm, float feedbackImpulse, float driveInertia, float speedKph, float deltaTime)
+        public DrivetrainOutputModel Tick(DrivetrainInputModel input, float averageWheelsRpm, float driveInertia, float speedKph, float deltaTime)
         {
-            var acceleration = CalculateEngine(input, averageWheelsRpm, feedbackImpulse, driveInertia, deltaTime);
+            var acceleration = CalculateEngine(input, averageWheelsRpm, driveInertia, deltaTime);
 
             var brakeTorque = input.BrakePedal * _carSystemsConfig.MaxBrakeTorque;
             var handBrakeTorque = input.Handbrake * _carSystemsConfig.MaxHandBrakeTorque;
@@ -51,13 +59,16 @@ namespace Gameplay.Car.Model
             return new DrivetrainOutputModel(acceleration, brakeTorque, handBrakeTorque, steerAngle);
         }
 
-        private float CalculateEngine(DrivetrainInputModel input, float averageWheelsRpm, float feedbackImpulse, float driveInertia, 
+        private float CalculateEngine(DrivetrainInputModel input, float averageWheelsRpm, float driveInertia, 
             float deltaTime)
         {
+            var engineRpm = _engineAngularVelocity * AngVel2RPM;
+            
+            
             var throttle = input.ThrottleCut ? 0f : input.ThrottlePedal;
 
-            var engineRpm = _engineAngularVelocity * AngVel2RPM;
-            var grossTorque = _torqueCurve.Evaluate(engineRpm) * throttle;
+            // повреждённый двигатель теряет отдачу, но не сопротивление - трение не масштабируем
+            var grossTorque = _torqueCurve.Evaluate(engineRpm) * throttle * _damageModel.PowerMultiplier;
             var frictionTorque = _torqueCurve.EvaluateFriction(engineRpm, throttle);
             var netTorque = grossTorque - frictionTorque;
             var netTorqueImpulse = netTorque * deltaTime;
@@ -72,14 +83,12 @@ namespace Gameplay.Car.Model
             if (!Mathf.Approximately(clutchEngagement, 0) && ratio != 0)
             {
                 var clutchSpeed = differentialVelocity * ratio;
-                clutchDragImpulse = GetClutchDragImpulse(_engineAngularVelocity, clutchSpeed, _engineConfig.InertiaKgM, driveInertia, ratio, netTorqueImpulse, feedbackImpulse, clutchEngagement, 500, deltaTime);
+                clutchDragImpulse = GetClutchDragImpulse(_engineAngularVelocity, clutchSpeed, _engineConfig.InertiaKgM, driveInertia, ratio, netTorqueImpulse, clutchEngagement, 500, deltaTime);
             }
             
             if(float.IsNaN(clutchDragImpulse)) clutchDragImpulse = 0;
 
             var impulseToEngine = netTorqueImpulse + clutchDragImpulse;
-            // реакцию дороги/тормоза/сопротивления колесо применяет само - feedbackImpulse нужен
-            // только для решения сцепления, колёсам отдаём лишь то, что пришло от двигателя
             var impulseToDifferential = -clutchDragImpulse * ratio;
 
             _engineAngularVelocity += impulseToEngine / _engineConfig.InertiaKgM;
@@ -93,7 +102,23 @@ namespace Gameplay.Car.Model
                 
             return differentialAccel;
         }
-        
+
+        private float CalculateIdleThrottle()
+        {
+            for(float throttle = 0; throttle <= 1; throttle+= 0.001f)
+            {
+                var grossTorque = _torqueCurve.Evaluate(_engineConfig.IdleRPM) * throttle;
+                var frictionTorque = _torqueCurve.EvaluateFriction(_engineConfig.IdleRPM, throttle);
+
+                if (grossTorque > frictionTorque)
+                {
+                    return throttle;
+                }
+            }
+
+            Debug.LogWarning("Can't calculate idle throttle due to engine configuration");
+            return 0;
+        }
         
         private float GetClutchDragImpulse(
             float engineShaftSpeed, 
@@ -102,7 +127,6 @@ namespace Gameplay.Car.Model
             float drivetrainInertia, 
             float totalRatio,
             float engineImpulse,
-            float wheelImpulse,
             float clutchEngagement, // [0..1] 0 - отжато (педаль выжата), 1 - прижато (педаль отпущена)
             float clutchTorqueCapacity,
             float deltaTime
@@ -112,8 +136,6 @@ namespace Gameplay.Car.Model
             var impulseLimit = clutchEngagement * clutchTorqueCapacity * deltaTime;
             var speedDifference = gearboxInputShaftSpeed - engineShaftSpeed;
             var impulseToMatchSpeeds = engineInertia * driveInertiaAtEngine * speedDifference;
-            
-            // импульс от колёс не учитываем: скорость вала берётся с колёс, которые его уже применили
             var engineTorqueContribution = driveInertiaAtEngine * engineImpulse;
 
             var idealImpulse =

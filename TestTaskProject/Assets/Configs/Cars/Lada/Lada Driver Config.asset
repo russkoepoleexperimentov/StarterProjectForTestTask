@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Lada Driver Config
   m_EditorClassIdentifier: Gameplay::Gameplay.Car.Configs.DriverConfig
   <EnableAutoGearbox>k__BackingField: 1
-  <ShiftDownRPM>k__BackingField: 1000
+  <ShiftDownRPM>k__BackingField: 1500
   <ShiftUpRPM>k__BackingField: 4000
   <EnableClutchAssist>k__BackingField: 1
   <ClutchEngageTimeSeconds>k__BackingField: 0.3
-  <ClutchLockSpeedKph>k__BackingField: 10
-  <MinClutchEngagement>k__BackingField: 0.15
+  <ClutchLockSpeedKph>k__BackingField: 20
+  <MinClutchEngagement>k__BackingField: 0.1
   <EnableThrottleAssist>k__BackingField: 1
   <EnableSteeringAssist>k__BackingField: 1
   <SteerSpeedFalloffKph>k__BackingField: 100

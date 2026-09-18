@@ -1,4 +1,5 @@
-﻿using Gameplay.Car.Configs;
+﻿using System;
+using Gameplay.Car.Configs;
 using Gameplay.Car.Model;
 using Gameplay.Car.View;
 using UnityEngine;
@@ -17,7 +18,8 @@ namespace Gameplay.Car.Presenter
         private float[] _volumes;
         private bool[] _acitves;
 
-        public CarAudioPresenter(CarStateModel state, CarAudioModel audioModel, CarAudioView audioView,  EngineConfig engineConfig)
+        public CarAudioPresenter(CarStateModel state, CarAudioModel audioModel, CarAudioView audioView,
+            EngineConfig engineConfig)
         {
             _state = state;
             _audioModel = audioModel;
@@ -29,7 +31,7 @@ namespace Gameplay.Car.Presenter
             _volumes = new float[clipsNum];
             _acitves = new bool[clipsNum];
         }
-        
+
         public void Tick()
         {
             if (_engineConfig.AudioConfig)

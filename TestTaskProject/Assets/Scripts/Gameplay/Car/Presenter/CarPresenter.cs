@@ -1,3 +1,4 @@
+using System;
 using Gameplay.Car.Input;
 using Gameplay.Car.Model;
 using Gameplay.Car.View;
@@ -19,9 +20,9 @@ namespace Gameplay.Car.Presenter
 
         public void FixedTick()
         {
-            _view.FetchFeedback(out var averageDriveWheelsRpm, out var feedbackImpulse, out var driveInertia);
+            _view.FetchFeedback(out var averageDriveWheelsRpm, out var driveInertia);
             var input = _input.Read(_view.SpeedKph, averageDriveWheelsRpm, Time.fixedDeltaTime);
-            var output = _drivetrainModel.Tick(input, averageDriveWheelsRpm, feedbackImpulse, driveInertia, _view.SpeedKph, Time.fixedDeltaTime);
+            var output = _drivetrainModel.Tick(input, averageDriveWheelsRpm, driveInertia, _view.SpeedKph, Time.fixedDeltaTime);
 
             _view.ApplyDrive(output);
         }
